@@ -46,8 +46,17 @@ export class LoginPageComponent implements OnInit {
         this.isLoggedIn = true;
         this.isLoginFailed = false;
         this.roles = this.storageService.getUser().roles;
+        console.log("Response from API:", res);
         this.showSuccess("Đăng nhập thành công!!");
-        this.router.navigate(['/']);
+        if(res.roles === 'ROLE_ADMIN'){
+          this.router.navigate(['/admin']);
+          return;
+        }
+        else{
+          this.router.navigate(['/']);
+          return;
+        }
+        // this.router.navigate(['/']);
       },error: err =>{
         console.log(err);
         this.isLoggedIn = false;
