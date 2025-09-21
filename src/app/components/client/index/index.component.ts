@@ -48,7 +48,7 @@ export class IndexComponent implements OnInit {
   isSignUpFailed = false;
   isLoggedIn = false;
   isLoginFailed = false;
-  roles: string[] = [];
+  role: string = '';
   errorMessage = '';
   authModal : boolean = false;
   listCategoryEnabled : any;
@@ -112,7 +112,14 @@ export class IndexComponent implements OnInit {
         this.storageService.saveUser(res);
         this.isLoggedIn = true;
         this.isLoginFailed = false;
-        this.roles = this.storageService.getUser().roles;
+        this.role = this.storageService.getUser().roles;
+        console.log(res);
+        if(res.role == "ROLE_ADMIN"){
+          this.router.navigate(['/admin']);
+        }else{
+          this.router.navigate(['/']);
+        }
+
         this.showSuccess("Đăng nhập thành công!!");
         this.authModal = false;
         
