@@ -24,12 +24,13 @@ export class CheckoutComponent implements OnInit {
   order = new Order();
   listOrderDetail: any[] = [];
   username !: string;
-
+  paymentCOD: boolean = false;
+  paymentVNPay: boolean = false;
   orderForm: any = {
     firstname: null,
     lastname: null,
     country: null,
-    addrest: null,
+    address: null,
     town: null,
     state: null,
     postCode: null,
@@ -77,7 +78,7 @@ export class CheckoutComponent implements OnInit {
           // && this.orderForm.state == null 
           // && this.orderForm.postCode == null 
           && this.orderForm.phone == null
-          && this.orderForm.email == null) {
+          && this.orderForm.email == null ) {
           this.orderForm.firstname = "";
           this.orderForm.lastname = "";
           this.messageService.add({ severity: 'info', summary: 'Ghi chú', detail: "Nhập đầy đủ thông tin!!" });

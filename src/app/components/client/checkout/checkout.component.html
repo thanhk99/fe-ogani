@@ -102,14 +102,14 @@
                             <div class="checkout__input__checkbox">
                                 <label for="payment">
                                     Thanh toán khi nhận hàng
-                                    <input type="checkbox" id="payment">
+                                    <input type="checkbox" id="payment" [(ngModel)]="paymentCOD" value="COD">
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="checkout__input__checkbox">
                                 <label for="paypal">
                                     Thanh toán bằng VNPay
-                                    <input type="checkbox" id="paypal">
+                                    <input type="checkbox" id="paypal" [(ngModel)]="paymentVNPay" value="VNPay">
                                     <span class="checkmark"></span>
                                 </label>
                             </div>

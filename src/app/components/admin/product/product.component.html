@@ -28,6 +28,7 @@
                 <th>Hình ảnh</th>
                 <th pSortableColumn="price">Giá <p-sortIcon field="price"></p-sortIcon></th>
                 <th pSortableColumn="category" style="min-width:10rem">Danh mục <p-sortIcon field="category"></p-sortIcon></th>
+                <th pSortableColumn="quantity">Số lượng <p-sortIcon field="quantity"></p-sortIcon></th>
                 <th style="min-width:10rem">Hành động</th>
                 <th></th>
             </tr>
@@ -41,6 +42,7 @@
                 <td><img src="{{'data:image/jpg;base64,' +product.images[0].data}}" [alt]="product.name" width="100" class="shadow-4" /></td>
                 <td>{{product.price | currency:'USD'}}</td>
                 <td>{{product.category.name}}</td>
+                <td>{{product.quantity}}</td>
                 <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="openUpdate(product)"></button>
                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(product.id,product.name)"></button>
