@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { InputText } from 'primeng/inputtext';
 import { Observable, of, Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 const ORDER_API = "http://localhost:8080/api/order/";
 @Injectable({
@@ -16,7 +17,8 @@ export class CartService {
   total = 0;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
 
@@ -113,10 +115,10 @@ export class CartService {
       quantity: item.quantity,
     }));
     console.log(orderItems);
-    return this.http.post(ORDER_API + 'check', {items: orderItems}).subscribe(
+    return this.http.post(ORDER_API + 'check',  orderItems).subscribe(
       response => {
         console.log('Order placed successfully', response);
-        // Xử lý phản hồi từ backend nếu cần
+        this.router.navigate(['/checkout']);
       },
       error => {
         console.error('Error placing order', error);
