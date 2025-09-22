@@ -65,18 +65,18 @@
             <div class="col-lg-6">
                 <nav class="header__menu">
                     <ul>
-                        <li class="active"><a href="javascript:void(0)">Home</a></li>
-                        <li><a href="javascript:void(0)" routerLink="/">Shop</a></li>
-                        <li><a href="javascript:void(0)">Pages</a>
+                        <li class="active"><a href="javascript:void(0)" (click)="gotoHome()">Trang chủ</a></li>
+                        <!-- <li><a href="javascript:void(0)" routerLink="/">Shop</a></li> -->
+                        <li><a href="javascript:void(0)">Tiện ích</a>
                             <ul class="header__menu__dropdown">
-                                <li><a href="javascript:void(0)" (click)="gotoshop()">Shop Details</a></li>
-                                <li><a href="javascript:void(0)" (click)="gotocart()">Shoping Cart</a></li>
-                                <li><a href="javascript:void(0)" (click)="gotoCheckout()">Check Out</a></li>
-                                <li><a href="javascript:void(0)" (click)="gotoBlog()">Blog Details</a></li>
+                                <!-- <li><a href="javascript:void(0)" (click)="gotoshop()">Shop Details</a></li> -->
+                                <li><a href="javascript:void(0)" (click)="gotocart()">Giỏ hàng</a></li>
+                                <li><a href="javascript:void(0)" (click)="gotoCheckout()">Thanh toán</a></li>
+                                <li><a href="javascript:void(0)" (click)="gotoBlog()">Danh sách bài viết</a></li>
                             </ul>
                         </li>
-                        <li><a href="javascript:void(0)" routerLink="/blog">Blog</a></li>
-                        <li><a href="javascript:void(0)" routerLink="/contact">Contact</a></li>
+                        <li><a href="javascript:void(0)" routerLink="/blog">Bài viết</a></li>
+                        <li><a href="javascript:void(0)" routerLink="/contact">Liên hệ</a></li>
                     </ul>
                 </nav>
             </div>
@@ -135,16 +135,16 @@
                                 <div >
                                     <a class="dropdown-item" href="javascript:void(0)" routerLink="/user" >
                                         <fa-icon [icon]="userIcon"></fa-icon>   
-                                        Profile
+                                        Hồ sơ
                                     </a>
                                     <a class="dropdown-item" href="javascript:void(0)" routerLink="my-order">
                                         <fa-icon [icon]="bag"></fa-icon>   
-                                        My Orders
+                                        Đơn hàng của tôi    
                                     </a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" (click)="logout();profile.toggle($event)" >
                                         <fa-icon [icon]="logoutIcon"></fa-icon>
-                                        Logout
+                                        Đăng xuất
                                     </a>
                                 </div>
                             </p-overlayPanel>
@@ -167,7 +167,7 @@
                 <div class="hero__categories">
                     <div class="hero__categories__all" (click)="showDepartmentClick()" >
                         <fa-icon [icon]="bars"></fa-icon>
-                        <span>All departments</span>
+                        <span>Chọn danh mục</span>
                     </div>
                     <ul *ngIf="showDepartment">
                         <li><a href="javascript:void(0)" *ngFor="let category of listCategoryEnabled" routerLink="category/{{category.id}}">{{category.name}}</a></li>
@@ -179,11 +179,11 @@
                     <div class="hero__search__form">
                         <form action="#">
                             <div class="hero__search__categories">
-                                All Categories
+                                Tất cả danh mục
                                 <span class="arrow_carrot-down"></span>
                             </div>
-                            <input type="text" placeholder="What do yo u need?" [(ngModel)]="keyword" name="keyword">
-                            <button class="site-btn" routerLink="/search/{{keyword}}">SEARCH</button>
+                            <input type="text" placeholder="Nhập sản phẩm muốn tìm kiếm?" [(ngModel)]="keyword" name="keyword">
+                            <button class="site-btn" routerLink="/search/{{keyword}}">TÌM KIẾM</button>
                         </form>
                     </div>
                     <div class="hero__search__phone">
@@ -191,8 +191,8 @@
                             <fa-icon [icon]="phone"></fa-icon>
                         </div>
                         <div class="hero__search__phone__text">
-                            <h5>+65 11.188.888</h5>
-                            <span>support 24/7 time</span>
+                            <h5>0971823000</h5>
+                            <span>Hỗ trợ 24/7</span>
                         </div>
                     </div>
                 </div>
@@ -217,9 +217,9 @@
                         <a href="javascript:void(0)"><img src="assets/image/logo.png" alt=""></a>
                     </div>
                     <ul>
-                        <li>Address: 60-49 Road 11378 New York</li>
-                        <li>Phone: +65 11.188.888</li>
-                        <li>Email: hello@colorlib.com</li>
+                        <li>Địa chỉ: 60-49 Road 11378 New York</li>
+                        <li>Số điện thoại: 0971823000</li>
+                        <li>Email: ogani@gmail.com</li>
                     </ul>
                 </div>
             </div>

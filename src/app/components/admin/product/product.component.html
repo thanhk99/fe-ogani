@@ -12,7 +12,7 @@
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
-                <h5 class="m-0">Manage Products</h5>
+                <h5 class="m-0">Quản lý sản phẩm</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Tìm kiếm" />`
@@ -24,11 +24,11 @@
                 <th>
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th pSortableColumn="name" style="min-width:15rem">Name <p-sortIcon field="name"></p-sortIcon></th>
-                <th>Image</th>
-                <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
-                <th pSortableColumn="category" style="min-width:10rem">Category <p-sortIcon field="category"></p-sortIcon></th>
-                <th style="min-width:10rem">Action</th>
+                <th pSortableColumn="name" style="min-width:15rem">Tên sản phẩm <p-sortIcon field="name"></p-sortIcon></th>
+                <th>Hình ảnh</th>
+                <th pSortableColumn="price">Giá <p-sortIcon field="price"></p-sortIcon></th>
+                <th pSortableColumn="category" style="min-width:10rem">Danh mục <p-sortIcon field="category"></p-sortIcon></th>
+                <th style="min-width:10rem">Hành động</th>
                 <th></th>
             </tr>
         </ng-template>
@@ -59,18 +59,18 @@
     <ng-template pTemplate="content">
         <!-- <img [src]="'assets/showcase/images/demo/product/' + product.image" [alt]="product.image" class="product-image" *ngIf="product.image"> -->
         <div class="field">
-            <label for="name">Name</label>
+            <label for="name">Tên sản phẩm</label>
             <input type="text" pInputText id="name" [(ngModel)]="productForm.name" required autofocus />
             <!-- <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small> -->
         </div>
         <div class="field">
-            <label for="description">Description</label>
+            <label for="description">Mô tả</label>
             <textarea id="description" pInputTextarea [(ngModel)]="productForm.description" required rows="3" cols="20"></textarea>
         </div>
 
 
         <div class="field">
-            <label class="mb-3">Category</label>
+            <label class="mb-3">Danh mục</label>
             <div class="formgrid grid">
                 <div class="field-radiobutton col-6" *ngFor="let category of listCategory">
                         <p-radioButton name="category" value="{{category.id}}" [(ngModel)]="productForm.categoryId" [inputId]="category.id" class="mr-2"></p-radioButton>
@@ -82,11 +82,11 @@
         
         <div class="formgrid grid">
             <div class="field col">
-                <label for="price">Price</label>
+                <label for="price">Giá</label>
                 <p-inputNumber id="price" [(ngModel)]="productForm.price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
             </div>
             <div class="field col">
-                <label for="quantity">Quantity</label>
+                <label for="quantity">Số lượng</label>
                 <p-inputNumber id="quantity" [(ngModel)]="productForm.quantity"></p-inputNumber>
             </div>
         </div>

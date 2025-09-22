@@ -10,7 +10,7 @@
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
-                <h5 class="m-0">Manage Blog</h5>
+                <h5 class="m-0">Quản lý bài viết</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Tìm kiếm" />`
@@ -22,11 +22,11 @@
                 <th>
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th>Image</th>
-                <th pSortableColumn="name"  style="min-width:10rem">Title <p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="price"  style="min-width:15rem">Description <p-sortIcon field="price"></p-sortIcon></th>
-                <th pSortableColumn="category" style="min-width:15rem">Content <p-sortIcon field="category"></p-sortIcon></th>
-                <th style="min-width:10rem">Action</th>
+                <th>Hình ảnh</th>
+                <th pSortableColumn="name"  style="min-width:10rem">Tiêu đề <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="price"  style="min-width:15rem">Mô tả <p-sortIcon field="price"></p-sortIcon></th>
+                <th pSortableColumn="category" style="min-width:15rem">Nội dung <p-sortIcon field="category"></p-sortIcon></th>
+                <th style="min-width:10rem">Hành động</th>
                 <th></th>
             </tr>
         </ng-template>
@@ -60,7 +60,7 @@
     <ng-template pTemplate="content">
         <!-- <img [src]="'assets/showcase/images/demo/product/' + product.image" [alt]="product.image" class="product-image" *ngIf="product.image"> -->
         <div class="field">
-            <label for="name">Title</label>
+            <label for="name">Tiêu đề</label>
             <input type="text" pInputText id="title" [(ngModel)]="blogForm.title" required autofocus />
             <!-- <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small> -->
         </div>
@@ -72,11 +72,11 @@
         </div>
 
         <div class="field">
-            <label for="description">Description</label>
+            <label for="description">Mô tả</label>
             <textarea id="description" pInputTextarea [(ngModel)]="blogForm.description" required rows="2" cols="20"></textarea>
         </div>
         <div class="field">
-            <label for="content">Content</label>
+            <label for="content">Nội dung</label>
             <textarea id="content" pInputTextarea [(ngModel)]="blogForm.content" required rows="4" cols="20"></textarea>
         </div>
 
