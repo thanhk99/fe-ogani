@@ -69,10 +69,10 @@
                         <li><a href="javascript:void(0)" routerLink="/">Shop</a></li>
                         <li><a href="javascript:void(0)">Pages</a>
                             <ul class="header__menu__dropdown">
-                                <li><a href="javascript:void(0)">Shop Details</a></li>
-                                <li><a href="javascript:void(0)">Shoping Cart</a></li>
-                                <li><a href="javascript:void(0)">Check Out</a></li>
-                                <li><a href="javascript:void(0)">Blog Details</a></li>
+                                <li><a href="javascript:void(0)" (click)="gotoshop()">Shop Details</a></li>
+                                <li><a href="javascript:void(0)" (click)="gotocart()">Shoping Cart</a></li>
+                                <li><a href="javascript:void(0)" (click)="gotoCheckout()">Check Out</a></li>
+                                <li><a href="javascript:void(0)" (click)="gotoBlog()">Blog Details</a></li>
                             </ul>
                         </li>
                         <li><a href="javascript:void(0)" routerLink="/blog">Blog</a></li>

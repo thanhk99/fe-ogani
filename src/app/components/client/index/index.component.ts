@@ -176,5 +176,18 @@ export class IndexComponent implements OnInit {
     this.messageService.add({severity:'warn', summary: 'Warn', detail: text});
   }
 
+  gotoshop(){
+    this.router.navigate(['/shop']);
+  }
+  gotocart(){
+    this.router.navigate(['/cart']);
+  }
+  gotoBlog(){
+    this.router.navigate(['/blog']);
+  }
+  gotoCheckout(){
+    this.router.navigate(['/checkout']);
+  }
+
 
 }
