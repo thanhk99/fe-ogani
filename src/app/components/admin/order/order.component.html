@@ -4,7 +4,7 @@
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
-                <h5 class="m-0">Manage Products</h5>
+                <h5 class="m-0">Quản lý đơn hàng</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Tìm kiếm" />`
@@ -16,16 +16,17 @@
                 <th style="width: 4rem">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th pSortableColumn="name">Customer <p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="country">Country<p-sortIcon field="country"></p-sortIcon></th>
-                <th pSortableColumn="address">Address <p-sortIcon field="address"></p-sortIcon></th>
+                <th pSortableColumn="name">Khách hàng <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="town">Tỉnh/Thành phố <p-sortIcon field="town"></p-sortIcon></th>
+                <th pSortableColumn="address">Địa chỉ <p-sortIcon field="address"></p-sortIcon></th>
                 <!-- <th pSortableColumn="town">Town/City <p-sortIcon field="town"></p-sortIcon></th>
                 <th pSortableColumn="state">Country/State<p-sortIcon field="state"></p-sortIcon></th> -->
                 <!-- <th pSortableColumn="postcode">Postcode/Zip <p-sortIcon field="postcode"></p-sortIcon></th> -->
-                <th pSortableColumn="phone">Phone <p-sortIcon field="phone"></p-sortIcon></th>
+                <th pSortableColumn="phone">Điện thoại <p-sortIcon field="phone"></p-sortIcon></th>
                 <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
-                <th pSortableColumn="price">Total <p-sortIcon field="price"></p-sortIcon></th>
-                <th style="min-width:10rem">Status</th>
+                <th pSortableColumn="price">Tổng cộng <p-sortIcon field="price"></p-sortIcon></th>
+                <th pSelectableRow="nameProduct">Tên mặt hàng</th>
+                <th style="min-width:10rem">Trạng thái</th>
                 <th></th>
             </tr>
         </ng-template>
@@ -40,7 +41,13 @@
                 <td>{{order.phone}}</td>
                 <td>{{order.email}}</td>
                 <td>{{order.totalPrice}}</td>
-                <td><button pButton type="button" label="Waiting For Delivery" class="p-button-success"></button></td>
+                <td>
+                    <ul *ngFor="let item of order.orderItems">
+                        <li>{{item.product.name}} (x{{item.quantity}})</li>
+                    </ul>
+                </td>
+                <td>{{order.status}}</td>
+                <td><button pButton type="button" label="Chờ giao hàng" class="p-button-success"></button></td>
             </tr>
         </ng-template>
     </p-table>

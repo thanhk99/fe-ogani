@@ -176,6 +176,10 @@ export class IndexComponent implements OnInit {
     this.messageService.add({severity:'warn', summary: 'Warn', detail: text});
   }
 
+  gotoHome(){
+    this.router.navigate(['/']);
+  }
+
   gotoshop(){
     this.router.navigate(['/shop']);
   }
