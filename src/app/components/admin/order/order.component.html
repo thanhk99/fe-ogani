@@ -24,7 +24,7 @@
                 <!-- <th pSortableColumn="postcode">Postcode/Zip <p-sortIcon field="postcode"></p-sortIcon></th> -->
                 <th pSortableColumn="phone">Điện thoại <p-sortIcon field="phone"></p-sortIcon></th>
                 <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
-                <th pSortableColumn="price">Tổng cộng <p-sortIcon field="price"></p-sortIcon></th>
+                <th pSortableColumn="price">Tổng tiền <p-sortIcon field="price"></p-sortIcon></th>
                 <th pSelectableRow="nameProduct">Tên mặt hàng</th>
                 <th style="min-width:10rem">Trạng thái</th>
                 <th></th>
@@ -46,7 +46,7 @@
                         <li>{{item.product.name}} (x{{item.quantity}})</li>
                     </ul>
                 </td>
-                <td>{{order.status}}</td>
+                <!-- <td>{{order.status}}</td> -->
                 <td><button pButton type="button" label="Chờ giao hàng" class="p-button-success"></button></td>
             </tr>
         </ng-template>
