@@ -77,17 +77,26 @@ export class TagComponent implements OnInit {
     })
   }
 
-  updateTag(){
-    const {id,name} = this.tagForm;
-    this.tagService.updateTag(id,name).subscribe({
-      next: res =>{
-        this.getList();
-        this.showSuccess("Cập nhật danh mục thành công!");
-        this.displayForm = false;
-      },error: err =>{
-        this.showError(err.message);
+    updateTag() {
+      const { id, name } = this.tagForm;
+      // Kiểm tra trùng tên (không tính chính tag đang sửa)
+      const isDuplicate = this.listTag?.some(
+          (tag: any) => tag.name?.trim().toLowerCase() === name?.trim().toLowerCase() && tag.id !== id
+      );
+      if (isDuplicate) {
+          this.showWarn("Tên danh mục đã tồn tại!");
+          return;
       }
-    })
+      this.tagService.updateTag(id, name).subscribe({
+          next: res => {
+              this.getList();
+              this.showSuccess("Cập nhật danh mục thành công!");
+              this.displayForm = false;
+          },
+          error: err => {
+              this.showError(err.message);
+          }
+      });
   }
 
   enableTag(id : number){

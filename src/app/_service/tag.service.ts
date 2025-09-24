@@ -19,6 +19,9 @@ export class TagService {
   getListTag():Observable<any>{
     return  this.http.get(TAG_API,httpOptions);
   }
+  getTagEnable():Observable<any>{
+    return this.http.get(TAG_API + 'enable',httpOptions);
+  }
 
   createTag(name: string):Observable<any>{
     return this.http.post(TAG_API + 'create',{name},httpOptions);

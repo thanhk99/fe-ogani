@@ -136,7 +136,7 @@ export class BlogComponent implements OnInit {
   }
 
   getListTag(){
-    this.tagService.getListTag().subscribe({
+    this.tagService.getTagEnable().subscribe({
       next: res=>{
         this.listTag = res;
       },error: err =>{

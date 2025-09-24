@@ -41,7 +41,7 @@
                 <td>{{product.name}}</td>
                 <td><img src="{{'data:image/jpg;base64,' +product.image}}" [alt]="product.name" width="100" class="shadow-4" /></td>
                 <td>{{product.price | currency:'USD'}}</td>
-                <td>{{product.category.name}}</td>
+                <td>{{product.category}}</td>
                 <td>{{product.quantity}}</td>
                 <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="openUpdate(product)"></button>

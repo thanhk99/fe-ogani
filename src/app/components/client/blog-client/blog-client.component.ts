@@ -54,6 +54,17 @@ export class BlogClientComponent implements OnInit {
       }
     })
   }
+
+  getBlog(id: number){
+    this.blogService.getBlog(id).subscribe({
+      next: res =>{
+        console.log(res);
+      },error: err=>{
+        console.log(err);
+      }
+    })
+  }
+
   
 
 }
