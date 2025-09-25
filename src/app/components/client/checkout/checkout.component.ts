@@ -57,6 +57,16 @@ export class CheckoutComponent implements OnInit {
     this.showDepartment = !this.showDepartment;
   }
 
+  selectPayment(method: string) {
+  if (method === 'COD') {
+    this.paymentCOD = true;
+    this.paymentVNPay = false;
+  } else if (method === 'VNPay') {
+    this.paymentVNPay = true;
+    this.paymentCOD = false;
+  }
+}
+
   placeOrder() {
     this.cartService.items.forEach(res => {
       let orderDetail: OrderDetail = new OrderDetail;

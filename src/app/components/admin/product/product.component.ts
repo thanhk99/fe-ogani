@@ -155,10 +155,10 @@ export class ProductComponent implements OnInit {
       next: res =>{
         this.getListProduct();
         this.showForm = false;
-        this.showSuccess("Thêm mới thành công");
+        this.messageService.add({severity:'success', summary: 'Thông báo', detail: "Tạo sản phẩm thành công!"});
 
       },error: err =>{
-        this.showError(err.message);
+        this.messageService.add({severity:'error', summary: 'Thông báo', detail: err.message});
       }
     })
   }
@@ -174,9 +174,9 @@ export class ProductComponent implements OnInit {
       next: res =>{
         this.getListProduct();
         this.showForm = false;
-        this.showSuccess("Cập nhật thành công");
+        this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Cập nhật thành công!'});
       },error: err =>{
-        this.showError(err.message);
+        this.messageService.add({severity:'error', summary: 'Thông báo', detail: err.message});
       }
     })
 
@@ -193,10 +193,10 @@ export class ProductComponent implements OnInit {
     this.productService.deleteProduct(this.productForm.id).subscribe({
       next: res =>{
         this.getListProduct();
-        this.showWarn("Xóa thành công");
+        this.messageService.add({severity:'warn', summary: 'Thông báo', detail: 'Xóa thành công!'});
         this.showDelete = false;
       },error: err =>{
-        this.showError(err.message);
+        this.messageService.add({severity:'error', summary: 'Thông báo', detail: err.message});
       }
     })
   }

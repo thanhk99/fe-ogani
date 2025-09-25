@@ -69,10 +69,10 @@ export class TagComponent implements OnInit {
     this.tagService.createTag(name).subscribe({
       next: res =>{
         this.getList();
-        this.showSuccess("Tạo danh mục thành công!");
+        this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Thêm danh mục thành công!'});
         this.displayForm = false;
       },error: err=>{
-        this.showError(err.message);
+        this.messageService.add({severity:'error', summary: 'Thông báo', detail: err.message});
       }
     })
   }
@@ -90,11 +90,11 @@ export class TagComponent implements OnInit {
       this.tagService.updateTag(id, name).subscribe({
           next: res => {
               this.getList();
-              this.showSuccess("Cập nhật danh mục thành công!");
+              this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Cập nhật danh mục thành công!'});
               this.displayForm = false;
           },
           error: err => {
-              this.showError(err.message);
+              this.messageService.add({severity:'error', summary: 'Thông báo', detail: err.message});
           }
       });
   }
@@ -103,10 +103,10 @@ export class TagComponent implements OnInit {
     this.tagService.enableTag(id).subscribe({
       next: res =>{
         this.getList();
-        this.showSuccess("Cập nhật thành công!!");
+        this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Cập nhật thành công!!'});
 
       },error: err=>{
-        this.showError(err.message);
+        this.messageService.add({severity:'error', summary: 'Thông báo', detail: err.message});
       }
     })
   }
@@ -116,10 +116,10 @@ export class TagComponent implements OnInit {
     this.tagService.deleteTag(id).subscribe({
       next: res =>{
         this.getList();
-        this.showWarn("Xóa danh mục thành công!!");
+        this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Xóa danh mục thành công!!'});
         this.deleteForm = false;
       },error: err=>{
-        this.showError(err.message);
+        this.messageService.add({severity:'error', summary: 'Thông báo', detail: err.message});
       }
     })
   }

@@ -153,9 +153,9 @@ export class BlogComponent implements OnInit {
       next: res =>{
         this.getList();
         this.showForm = false;
-        this.showSuccess("Tạo mới thành công");
+        this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Tạo bài viết thành công!'});
       },error: err =>{
-        this.showError(err.message);
+        this.messageService.add({severity:'error', summary: 'Thông báo', detail: err.message});
 
       }
     })
@@ -170,9 +170,9 @@ export class BlogComponent implements OnInit {
       next: res =>{
         this.getList();
         this.showForm=false;
-        this.showSuccess("Cập nhật thành công");
+        this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Cập nhật thành công!'});
       },error: err =>{
-        this.showError(err.message);
+        this.messageService.add({severity:'error', summary: 'Thông báo', detail: err.message});
       }
     })
   }
@@ -182,10 +182,10 @@ export class BlogComponent implements OnInit {
       next: res =>{
         this.getList();
         this.onDelete = false;
-        this.showWarn("Xóa thành công");
+        this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Xóa thành công!'});
       },error: err =>{
         console.log(err);
-        this.showError(err.message);
+        this.messageService.add({severity:'error', summary: 'Thông báo', detail: err.message});
       }
     })
   }

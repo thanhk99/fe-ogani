@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { faBars, faHeart, faPhone, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
+import { MessageService } from 'primeng/api';
 import { CartService } from 'src/app/_service/cart.service';
 
 @Component({
@@ -16,7 +17,7 @@ export class CartComponent {
 
   showDepartment = false;
 
-  constructor(public cartService: CartService){
+  constructor(public cartService: CartService , private messageService: MessageService){
 
   }
 
@@ -45,6 +46,10 @@ export class CartComponent {
     }
   }
   checkoutOrder(){
+    if(this.cartService.getItems().length === 0){
+      this.messageService.add({severity:'warn', summary: 'Cảnh báo', detail: 'Giỏ hàng trống! Vui lòng thêm sản phẩm vào giỏ hàng.'});
+      return;
+    }
     this.cartService.checkoutOrder();
   }
   
