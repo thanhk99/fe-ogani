@@ -343,6 +343,12 @@ export class ProductComponent implements OnInit {
     this.disabled = false;
   }
 
+  deleteImage() {
+    this.listImageChoosen = this.listImageChoosen.filter((img: any) => img.id !== this.imageChoosen.id);
+    this.imageChoosen = null;
+    this.disabled = true;
+  }
+
   showSuccess(text: string) {
     this.messageService.add({ severity: 'success', summary: 'Success', detail: text });
   }

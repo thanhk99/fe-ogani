@@ -79,8 +79,8 @@
                 cols="20"></textarea>
         </div>
         <div class="field">
-            <label for="detail">Thông tin sản phẩm</label>
-            <textarea id="detail" pInputTextarea [(ngModel)]="productForm.detail" required rows="5"
+            <label for="content">Thông tin sản phẩm</label>
+            <textarea id="content" pInputTextarea [(ngModel)]="productForm.content" required rows="5"
                 cols="30"></textarea>
         </div>
 
@@ -133,8 +133,8 @@
                     <div>
                         <button pButton (click)="chooseImage()" class="p-button-primary w-auto" label="Chọn ảnh"
                             [disabled]="disabled"></button>
-                        <button pButton class="p-button-danger ml-2 w-auto" icon="pi pi-trash " label="Xóa ảnh"
-                            [disabled]="disabled"></button>
+                        <button pButton (click)="deleteImage()" class="p-button-danger ml-2 w-auto" icon="pi pi-trash "
+                            label="Xóa ảnh" [disabled]="disabled"></button>
                     </div>
                 </div>
                 <p-divider align="left">
