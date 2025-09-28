@@ -85,17 +85,11 @@
         </div>
 
 
-        <div class="field">
-            <label class="mb-3">Danh mục</label>
-            <div class="formgrid grid">
-                <div class="field-radiobutton col-6" *ngFor="let category of listCategory">
-                    <p-radioButton name="category" value="{{category.id}}" [(ngModel)]="productForm.categoryId"
-                        [inputId]="category.id" class="mr-2"></p-radioButton>
-                    <label [for]="category.id">{{category.name}}</label>
-                </div>
-            </div>
+        <div class="field col">
+            <label for="categoryId">Danh mục</label>
+            <p-dropdown id="categoryId" [options]="listCategory" [(ngModel)]="productForm.categoryId" optionLabel="name"
+                optionValue="id" placeholder="Chọn danh mục"></p-dropdown>
         </div>
-
 
         <div class="formgrid grid">
             <div class="field col">
@@ -179,8 +173,8 @@
         <span class="ml-2">Bạn có chắc xóa <span>{{productForm.name}}</span> ?</span>
     </div>
     <div class="flex justify-content-end mt-3">
-        <p-button label="Yes" icon="pi pi-check" class="mr-2" (click)="deleteProduct()"></p-button>
-        <p-button label="No" icon="pi pi-times" (click)="showDelete=false"></p-button>
+        <p-button label="Đồng ý" icon="pi pi-check" class="mr-2" (click)="deleteProduct()"></p-button>
+        <p-button label="Hủy" icon="pi pi-times" (click)="showDelete=false"></p-button>
     </div>
 </p-dialog>
 

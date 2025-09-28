@@ -108,6 +108,7 @@ export class ProductComponent implements OnInit {
       categoryId: null,
       imageIds: []
     }
+
   }
 
   // openUpdate(data : any){
@@ -128,22 +129,29 @@ export class ProductComponent implements OnInit {
 
 
   openUpdate(data: any) {
-    this.onUpdate = true;
-    this.showForm = true;
+  this.onUpdate = true;
+  this.showForm = true;
 
-    this.productForm = {
-      id: data.id,
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      quantity: data.quantity,
-      content: data.content,
-      categoryId: data.categoryId,
-      imageIds: Array.isArray(data.images) ? data.images.map((img: any) => img.id) : []
-    };
-
-    this.listImageChoosen = Array.isArray(data.images) ? [...data.images] : [];
-  }
+  this.productService.getProdct(data.id).subscribe({
+    next: res => {
+      this.productForm = {
+        id: res.id,
+        name: res.name,
+        description: res.description,
+        price: res.price,
+        quantity: res.quantity,
+        content: res.content,
+        categoryId: res.category ? res.category.id : null,
+        imageIds: Array.isArray(res.images) ? res.images.map((img: any) => img.id) : []
+      };
+      this.listImageChoosen = Array.isArray(res.images) ? [...res.images] : [];
+      console.log('Updated productForm:', this.productForm); // Log sau khi nhận dữ liệu
+    },
+    error: err => {
+      console.log(err);
+    }
+  });
+}
 
 
 
@@ -300,16 +308,17 @@ export class ProductComponent implements OnInit {
 
 
   onDelete(id: number, name: string) {
-    this.productForm.id = null;
-    this.showDelete = true;
-    this.productForm.id = id;
+    this.productForm.id = id; // Gán id trước
     this.productForm.name = name;
+    this.showDelete = true;
+    console.log('Delete ID:', id); // Debug để kiểm tra
   }
 
   deleteProduct() {
     this.productService.deleteProduct(this.productForm.id).subscribe({
       next: res => {
         this.getListProduct();
+        console.log(res);
         this.messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Xóa thành công!' });
         this.showDelete = false;
       }, error: err => {

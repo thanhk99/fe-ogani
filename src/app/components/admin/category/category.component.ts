@@ -58,12 +58,14 @@ export class CategoryComponent implements OnInit {
       this.displayForm =true;
       this.categoryForm.id = id;
       this.categoryForm.name = name;
+      console.log(this.categoryForm);
   }
 
   onDelete(id:number,name : string){
     this.deleteForm = true;
     this.categoryForm.id = id;
     this.categoryForm.name = name;
+    console.log(this.categoryForm);
   }
 
   createCategory(){
@@ -85,6 +87,7 @@ export class CategoryComponent implements OnInit {
     this.categoryService.updateCategory(id,name).subscribe({
       next: res =>{
         this.getListCategory();
+        console.log(res);
         this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Cập nhật danh mục thành công!'});
         this.displayForm = false;
       },error: err =>{
@@ -98,6 +101,7 @@ export class CategoryComponent implements OnInit {
     this.categoryService.enableCategory(id).subscribe({
       next: res =>{
         this.getListCategory();
+        console.log(res);
         this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Cập nhật thành công!'});
       },error: err=>{
         this.messageService.add({severity:'error', summary: 'Thông báo', detail: err.message});
@@ -111,6 +115,7 @@ export class CategoryComponent implements OnInit {
     this.categoryService.deleteCategory(id).subscribe({
       next: res =>{
         this.getListCategory();
+        console.log(res);
         this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Xóa danh mục thành công!'});
         this.deleteForm = false;
       },error: err=>{
