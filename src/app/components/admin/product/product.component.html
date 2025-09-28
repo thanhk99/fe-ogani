@@ -45,7 +45,7 @@
                 <td>{{product.name}}</td>
                 <td><img src="{{'data:image/jpg;base64,' +product.image}}" [alt]="product.name" width="100"
                         class="shadow-4" /></td>
-                <td>{{product.price | currency:'USD'}}</td>
+                <td>{{product.price | currency:'VND':'symbol':'1.0-0':'vi'}}</td>
                 <td>{{product.category}}</td>
                 <td>{{product.quantity}}</td>
                 <td>
@@ -100,8 +100,9 @@
         <div class="formgrid grid">
             <div class="field col">
                 <label for="price">Giá</label>
-                <p-inputNumber id="price" [(ngModel)]="productForm.price" mode="currency" currency="USD"
-                    locale="en-US"></p-inputNumber>
+                <p-inputNumber [(ngModel)]="productForm.price" mode="currency" currency="VND" locale="vi-VN"
+                    [minFractionDigits]="0" [maxFractionDigits]="0" (onInput)="onInput($event)"
+                    [allowEmpty]="true"></p-inputNumber>
             </div>
             <div class="field col">
                 <label for="quantity">Số lượng</label>
@@ -112,7 +113,14 @@
                 <p-dropdown id="unit" [options]="unitOptions" [(ngModel)]="productForm.unit" optionLabel="label"
                     optionValue="value" placeholder="Chọn đơn vị" [filter]="true" [showClear]="true"
                     filterPlaceholder="Tìm đơn vị...">
+                    <ng-template let-option pTemplate="item">
+                        <div class="flex align-items-center">
+                            <i [class]="'pi ' + (option.value === 'kg' ? 'pi-weight' : 'pi-box')"></i>
+                            <span class="ml-2">{{ option.label }}</span>
+                        </div>
+                    </ng-template>
                 </p-dropdown>
+
             </div>
 
 

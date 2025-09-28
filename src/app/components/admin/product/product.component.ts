@@ -3,12 +3,14 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { CategoryService } from 'src/app/_service/category.service';
 import { ImageService } from 'src/app/_service/image.service';
 import { ProductService } from 'src/app/_service/product.service';
+import { CurrencyPipe } from '@angular/common';
+// import { VndCurrencyPipe } from 'src/app/_service/pie';
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'],
-  providers: [MessageService, ConfirmationService]
+  providers: [MessageService, ConfirmationService, CurrencyPipe]
 })
 export class ProductComponent implements OnInit {
 
@@ -40,40 +42,43 @@ export class ProductComponent implements OnInit {
     categoryId: null,
     imageIds: []
   };
-unitOptions = [
-  // --- Khối lượng ---
-  { label: 'Kilogram (Kg)', value: 'KG' },
-  { label: 'Gram (g)', value: 'G' },
-  // { label: 'Tấn (T)', value: 'TAN' },
+  unitOptions = [
+    // --- Khối lượng ---
+    { label: 'Kilogram (Kg)', value: 'KG' },
+    { label: 'Gram (g)', value: 'G' },
+    // { label: 'Tấn (T)', value: 'TAN' },
 
-  // --- Thể tích ---
-  { label: 'Lít (L)', value: 'LIT' },
-  { label: 'Mililít (ml)', value: 'ML' },
+    // --- Thể tích ---
+    { label: 'Lít (L)', value: 'LIT' },
+    { label: 'Mililít (ml)', value: 'ML' },
 
-  // --- Chiều dài (nếu cần) ---
-  // { label: 'Mét (m)', value: 'M' },
-  // { label: 'Centimet (cm)', value: 'CM' },
-  // { label: 'Milimet (mm)', value: 'MM' },
+    // --- Chiều dài (nếu cần) ---
+    // { label: 'Mét (m)', value: 'M' },
+    // { label: 'Centimet (cm)', value: 'CM' },
+    // { label: 'Milimet (mm)', value: 'MM' },
 
-  // --- Đếm / gói ---
-  { label: 'Cái', value: 'CAI' },
-  { label: 'Chiếc', value: 'CHIEC' },
-  { label: 'Hộp', value: 'HOP' },
-  { label: 'Lon', value: 'LON' },
-  { label: 'Chai', value: 'CHAI' },
-  { label: 'Túi', value: 'TUI' },
-  { label: 'Gói', value: 'GOI' },
-  { label: 'Thùng', value: 'THUNG' },
+    // --- Đếm / gói ---
+    { label: 'Cái', value: 'CAI' },
+    { label: 'Chiếc', value: 'CHIEC' },
+    { label: 'Hộp', value: 'HOP' },
+    { label: 'Lon', value: 'LON' },
+    { label: 'Chai', value: 'CHAI' },
+    { label: 'Túi', value: 'TUI' },
+    { label: 'Gói', value: 'GOI' },
+    { label: 'Thùng', value: 'THUNG' },
 
-  // --- Khác ---
-  // { label: 'Set/Bộ', value: 'SET' },
-  // { label: 'Cặp', value: 'CAP' },
-  // { label: 'Đôi', value: 'DOI' }
-];
+    // --- Khác ---
+    // { label: 'Set/Bộ', value: 'SET' },
+    // { label: 'Cặp', value: 'CAP' },
+    // { label: 'Đôi', value: 'DOI' }
+  ];
 
 
 
-  constructor(private messageService: MessageService, private productService: ProductService, private imageService: ImageService, private categoryService: CategoryService) {
+  constructor(private messageService: MessageService,
+    private productService: ProductService,
+    private imageService: ImageService,
+    private categoryService: CategoryService) {
 
   }
 
@@ -81,6 +86,11 @@ unitOptions = [
     this.getListProduct();
     this.getListCategoryEnabled();
     this.getListImage();
+  }
+
+  onInput(event: any) {
+    this.productForm.price = event.value; // Cho phép null hoặc trống
+    // console.log('Updated price:', this.productForm.price);
   }
 
 
@@ -334,5 +344,8 @@ unitOptions = [
   showWarn(text: string) {
     this.messageService.add({ severity: 'warn', summary: 'Warn', detail: text });
   }
+
+
+
 
 }

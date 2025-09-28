@@ -50,9 +50,14 @@ import { LoginPageComponent } from './components/client/login-page/login-page.co
 import { CommonModule } from '@angular/common';
 // import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
+import { registerLocaleData } from '@angular/common';
+import localeVi from '@angular/common/locales/vi';
+
+registerLocaleData(localeVi);
 
 
 @NgModule({
+  
   declarations: [
     AppComponent,
     DashboardComponent,
