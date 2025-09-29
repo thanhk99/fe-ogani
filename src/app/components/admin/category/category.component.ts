@@ -70,6 +70,12 @@ export class CategoryComponent implements OnInit {
 
   createCategory(){
     const {name} = this.categoryForm;
+    // Kiểm tra trùng tên (không phân biệt hoa thường, loại bỏ khoảng trắng)
+    const isDuplicate = this.listCategory?.some((category: any) => category.name.trim().toLowerCase() === name.trim().toLowerCase());
+    if (isDuplicate) {
+      this.showWarn('Tên danh mục đã tồn tại. Vui lòng chọn tên khác.');
+      return;
+    }
     this.categoryService.createCategory(name).subscribe({
       next: res =>{
         this.getListCategory();
