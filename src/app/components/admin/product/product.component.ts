@@ -41,7 +41,7 @@ export class ProductComponent implements OnInit {
     content: null,
     categoryId: null,
     imageIds: [],
-    content : null
+    unit : null,
   };
   unitOptions = [
     // --- Khối lượng ---
