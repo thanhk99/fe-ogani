@@ -52,6 +52,7 @@ import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
 import { registerLocaleData } from '@angular/common';
 import localeVi from '@angular/common/locales/vi';
+import { ReportComponent } from './components/admin/report/report.component';
 
 registerLocaleData(localeVi);
 
@@ -79,6 +80,7 @@ registerLocaleData(localeVi);
     MyOrderComponent,
     SearchComponent,
     LoginPageComponent,
+    ReportComponent,
 
   ],
   imports: [

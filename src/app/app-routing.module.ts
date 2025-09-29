@@ -20,6 +20,7 @@ import { ShopComponent } from './components/client/shop/shop.component';
 import { UserDetailComponent } from './components/client/user-detail/user-detail.component';
 import { AuthGuardService } from './_service/auth-guard.service';
 import { RoleGuardService } from './_service/role-guard.service';
+import { ReportComponent } from './components/admin/report/report.component';
 
 
 const routes: Routes = [
@@ -30,7 +31,8 @@ const routes: Routes = [
       {path:'product',component:ProductComponent},
       {path:'order',component:OrderComponent},
       {path:'blog',component:BlogComponent},
-      {path:'tag',component:TagComponent}
+      {path:'tag',component:TagComponent},
+      {path:'report',component:ReportComponent}
     ]
   },
   {
