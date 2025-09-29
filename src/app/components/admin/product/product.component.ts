@@ -38,7 +38,8 @@ export class ProductComponent implements OnInit {
     price: null,
     quantity: null,
     categoryId: null,
-    imageIds: []
+    imageIds: [],
+    content : null
   };
 
   constructor(private messageService: MessageService,private productService: ProductService,private imageService: ImageService,private categoryService:CategoryService){
