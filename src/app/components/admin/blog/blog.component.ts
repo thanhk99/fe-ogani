@@ -83,6 +83,7 @@ export class BlogComponent implements OnInit {
       imageId : null,
       tags: [],
     }
+ 
   }
   showUpdate(data: any){
     this.selectedTags = [];
@@ -96,12 +97,14 @@ export class BlogComponent implements OnInit {
     data.tags.forEach( (res: any) =>{
       this.selectedTags.push(res.id);
     })
+    console.log(this.blogForm);
   }
 
   showDelete(id: number, title: string){
     this.onDelete=true;
     this.blogForm.id = id;
     this.blogForm.title = title;
+    console.log(this.blogForm);
   }
 
 
@@ -129,6 +132,7 @@ export class BlogComponent implements OnInit {
     this.blogService.getList().subscribe({
       next: res =>{
         this.listBlog =res;
+        console.log(res);
       },error: err =>{
         console.log(err);
       }
@@ -139,6 +143,7 @@ export class BlogComponent implements OnInit {
     this.tagService.getTagEnable().subscribe({
       next: res=>{
         this.listTag = res;
+        console.log(res);
       },error: err =>{
         console.log(err);
       }
@@ -169,6 +174,7 @@ export class BlogComponent implements OnInit {
     this.blogService.updateBLog(id,title,description,content,imageId,tags).subscribe({
       next: res =>{
         this.getList();
+        console.log(res);
         this.showForm=false;
         this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Cập nhật thành công!'});
       },error: err =>{
@@ -181,6 +187,7 @@ export class BlogComponent implements OnInit {
     this.blogService.deleleBlog(this.blogForm.id).subscribe({
       next: res =>{
         this.getList();
+        console.log(res);
         this.onDelete = false;
         this.messageService.add({severity:'success', summary: 'Thông báo', detail: 'Xóa thành công!'});
       },error: err =>{

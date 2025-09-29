@@ -47,9 +47,18 @@ import { UserDetailComponent } from './components/client/user-detail/user-detail
 import { MyOrderComponent } from './components/client/my-order/my-order.component';
 import { SearchComponent } from './components/client/search/search.component';
 import { LoginPageComponent } from './components/client/login-page/login-page.component';
+import { CommonModule } from '@angular/common';
+// import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { registerLocaleData } from '@angular/common';
+import localeVi from '@angular/common/locales/vi';
+import { ReportComponent } from './components/admin/report/report.component';
+
+registerLocaleData(localeVi);
 
 
 @NgModule({
+  
   declarations: [
     AppComponent,
     DashboardComponent,
@@ -71,6 +80,7 @@ import { LoginPageComponent } from './components/client/login-page/login-page.co
     MyOrderComponent,
     SearchComponent,
     LoginPageComponent,
+    ReportComponent,
 
   ],
   imports: [
@@ -100,7 +110,9 @@ import { LoginPageComponent } from './components/client/login-page/login-page.co
     PasswordModule,
     SliderModule,
     DataViewModule,
-    MultiSelectModule
+    MultiSelectModule,
+    CommonModule,
+    DropdownModule
   ],
   providers: [],
   bootstrap: [AppComponent]
