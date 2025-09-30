@@ -20,7 +20,6 @@ export class CheckoutComponent implements OnInit {
   bag = faShoppingBag;
   phone = faPhone;
   bars = faBars;
-  selectedPayment: 'COD' | 'VNPay' | null = null;
   showDepartment = false;
   order = new Order();
   listOrderDetail: any[] = [];
@@ -58,23 +57,17 @@ export class CheckoutComponent implements OnInit {
     this.showDepartment = !this.showDepartment;
   }
 
-  selectPayment(method: 'COD' | 'VNPay') {
-    if (this.selectedPayment === method) {
-      this.selectedPayment = null; // Deselect if the same method is clicked again
-    } else {
-      this.selectedPayment = method; // Select the new method
-    }
+  selectPayment(method: string) {
+  if (method === 'COD') {
+    this.paymentCOD = true;
+    this.paymentVNPay = false;
+  } else if (method === 'VNPay') {
+    this.paymentVNPay = true;
+    this.paymentCOD = false;
   }
+}
 
   placeOrder() {
-    if (!this.selectedPayment) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Cảnh báo',
-        detail: 'Vui lòng chọn một phương thức thanh toán!',
-      });
-      return;
-    }
     this.cartService.items.forEach(res => {
       let orderDetail: OrderDetail = new OrderDetail;
       orderDetail.name = res.name;
@@ -95,7 +88,7 @@ export class CheckoutComponent implements OnInit {
           // && this.orderForm.state == null 
           // && this.orderForm.postCode == null 
           && this.orderForm.phone == null
-          && this.orderForm.email == null) {
+          && this.orderForm.email == null ) {
           this.orderForm.firstname = "";
           this.orderForm.lastname = "";
           this.messageService.add({ severity: 'info', summary: 'Ghi chú', detail: "Nhập đầy đủ thông tin!!" });
