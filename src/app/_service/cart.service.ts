@@ -21,7 +21,9 @@ export class CartService {
     private router: Router
   ) { }
 
-
+  setTotalPrice(totalPrice : any){
+    this.totalPrice=totalPrice
+  }
 
   saveCart():void{
     localStorage.setItem('cart_items',JSON.stringify(this.items));
@@ -65,25 +67,22 @@ export class CartService {
   }
   loadCart():void{
     this.items = JSON.parse(localStorage.getItem('cart_items') as any) || [];
+    this.items.forEach(e => {
+      this.totalPrice += e.price
+      this.total += e.price
+    });
     this.getTotalPrice();
 
   }
 
   getItems() {
     return this.items;
-    this.getTotalPrice();
   }
 
 
 
   getTotalPrice(){
-    this.totalPrice = 0;
-    this.total = 0;
-    this.items.forEach(res =>{
-      this.totalPrice += res.subTotal;
-      this.total = this.totalPrice;
-    })
-    return this.totalPrice;
+    return this.totalPrice 
   }
 
   remove(item: any){
@@ -126,5 +125,9 @@ export class CartService {
       }
     );
 
+  }
+
+  getTotal(){
+    return this.total;
   }
 }

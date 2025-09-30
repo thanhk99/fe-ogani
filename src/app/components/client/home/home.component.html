@@ -5,7 +5,7 @@
     <div class="container">
         <div class="row justify-content-end">
             <div class="col-lg-9">
-                <div class="hero__item set-bg right" [ngStyle]="{backgroundImage:'url(assets/image/banner.jpg'}">
+                <div class="hero__item set-bg right" [ngStyle]="{backgroundImage:'url(assets/image/banner.jpg)'}">
                     <div class="hero__text">
                         <span>FRUIT FRESH</span>
                         <h2>Vegetable <br />100% Organic</h2>
@@ -50,7 +50,7 @@
         <div class="row featured__filter">
             <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let product of listProductNewest">
                 <div class="featured__item">
-                    <div class="featured__item__pic set-bg" [ngStyle]="{'background-image': 'url(data:image/jpeg;base64,'+ product.images[0].data+')'}">
+                    <div class="featured__item__pic set-bg" [ngStyle]="{'background-image': 'url(data:image/jpeg;base64,'+ product.images.data+')'}">
                         <ul class="featured__item__pic__hover">
                             <li><a href="javascript:void(0)" (click)="addToWishList(product)"><fa-icon [icon]="heart"></fa-icon></a></li>
                             <li><a href="javascript:void(0)" routerLink="/product/{{product.id}}"><fa-icon [icon]="retweet"></fa-icon></a></li>
@@ -100,7 +100,7 @@
         <div class="row featured__filter">
             <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let product of listProductPrice">
                 <div class="featured__item">
-                    <div class="featured__item__pic set-bg" [ngStyle]="{'background-image': 'url(data:image/jpeg;base64,'+ product.images[0].data+')'}">
+                    <div class="featured__item__pic set-bg" [ngStyle]="{'background-image': 'url(data:image/jpeg;base64,'+ product.images.data+')'}">
                         <ul class="featured__item__pic__hover">
                             <li><a href="javascript:void(0)" (click)="addToWishList(product)"><fa-icon [icon]="heart"></fa-icon></a></li>
                             <li><a href="javascript:void(0)" routerLink="/product/{{product.id}}"><fa-icon [icon]="retweet"></fa-icon></a></li>

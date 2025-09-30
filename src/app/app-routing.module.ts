@@ -21,6 +21,8 @@ import { UserDetailComponent } from './components/client/user-detail/user-detail
 import { AuthGuardService } from './_service/auth-guard.service';
 import { RoleGuardService } from './_service/role-guard.service';
 import { ReportComponent } from './components/admin/report/report.component';
+import { PaymentComponent } from './components/client/payment/payment.component';
+import { PaymentResultComponent } from './components/client/payment-result/payment-result.component';
 
 
 const routes: Routes = [
@@ -47,7 +49,9 @@ const routes: Routes = [
       {path:'blog/:id',component:BlogDetailComponent},
       {path:'user',component:UserDetailComponent,canActivate: [AuthGuardService]},
       {path:'my-order',component:MyOrderComponent,canActivate: [AuthGuardService]},
-      {path:'search/:keyword',component:SearchComponent}
+      {path:'search/:keyword',component:SearchComponent},
+      {path:'payment',component:PaymentComponent,canActivate: [AuthGuardService]},
+      {path:'payment-result',component:PaymentResultComponent,canActivate: [AuthGuardService]}
     ]
   },
   {path:'login',component:LoginPageComponent}

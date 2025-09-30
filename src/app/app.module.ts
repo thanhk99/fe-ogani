@@ -18,7 +18,7 @@ import {ToastModule} from 'primeng/toast';
 import {ButtonModule} from 'primeng/button';
 import {TableModule} from 'primeng/table';
 import {InputNumberModule} from 'primeng/inputnumber';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ToolbarModule} from 'primeng/toolbar';
@@ -53,6 +53,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { registerLocaleData } from '@angular/common';
 import localeVi from '@angular/common/locales/vi';
 import { ReportComponent } from './components/admin/report/report.component';
+import { PaymentComponent } from './components/client/payment/payment.component';
+import { PaymentResultComponent } from './components/client/payment-result/payment-result.component';
 
 registerLocaleData(localeVi);
 
@@ -81,6 +83,8 @@ registerLocaleData(localeVi);
     SearchComponent,
     LoginPageComponent,
     ReportComponent,
+    PaymentComponent,
+    PaymentResultComponent,
 
   ],
   imports: [
@@ -112,7 +116,8 @@ registerLocaleData(localeVi);
     DataViewModule,
     MultiSelectModule,
     CommonModule,
-    DropdownModule
+    DropdownModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
