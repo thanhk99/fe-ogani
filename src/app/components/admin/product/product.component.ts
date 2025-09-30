@@ -223,9 +223,9 @@ export class ProductComponent implements OnInit {
     data.forEach((res: any) => {
       this.productForm.imageIds.push(res.id);
     })
-    const { name, description, price, quantity, content, categoryId, imageIds } = this.productForm;
+    const { name, description, price, quantity, content, unit, categoryId, imageIds } = this.productForm;
     console.log(this.productForm);
-    this.productService.createProduct(name, description, price, quantity, content, categoryId, imageIds).subscribe({
+    this.productService.createProduct(name, description, price, quantity, content,unit, categoryId, imageIds).subscribe({
       next: res => {
         this.getListProduct();
         this.showForm = false;
@@ -279,6 +279,7 @@ export class ProductComponent implements OnInit {
       price,
       quantity,
       content,
+      unit,
       categoryId,
       imageIds
     } = this.productForm;
@@ -286,7 +287,7 @@ export class ProductComponent implements OnInit {
     console.log("Updating product:", this.productForm);
 
     this.productService
-      .updateProduct(id, name, description, price, quantity, content, categoryId, imageIds)
+      .updateProduct(id, name, description, price, quantity, content, unit, categoryId, imageIds)
       .subscribe({
         next: res => {
           this.getListProduct();

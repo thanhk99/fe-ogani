@@ -7,7 +7,7 @@
                 <div class="breadcrumb__text">
                     <h2>Thông tin sản phẩm</h2>
                     <div class="breadcrumb__option">
-                        <a routerLink="/" >Trang chủ</a>
+                        <a routerLink="/">Trang chủ</a>
                         <span>Thông tin sản phẩm</span>
                     </div>
                 </div>
@@ -23,10 +23,11 @@
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
                         <img class="product__details__pic__item--large"
-                            src="{{'data:image/jpg;base64,' + product.images[0].data}}" alt="{{product.name}}" >
+                            src="{{'data:image/jpg;base64,' + product.images[0].data}}" alt="{{product.name}}">
                     </div>
                     <div class="product__details__pic__slider">
-                        <img src="{{'data:image/jpg;base64,' + image.data}}" alt="" *ngFor="let image of product.images" class="col-3">
+                        <img src="{{'data:image/jpg;base64,' + image.data}}" alt="" *ngFor="let image of product.images"
+                            class="col-3">
                     </div>
                 </div>
             </div>
@@ -41,32 +42,39 @@
                         <fa-icon [icon]="star_half"></fa-icon>
                         <span>(18 reviews)</span>
                     </div>
-                    <div class="product__details__price">{{product.price | currency}}</div>
-                    <p>{{product.description}}</p>
+                    <div class="product__details__price">{{product.price | currency:'VND':'symbol':'1.0-0':'vi'}}</div>
+                    <span style="font-weight: bold;">Mô tả sản phẩm: </span>
+                    <p>
+                        <!-- <span style="font-weight: bold;">Mô tả sản phẩm: </span> -->
+                        <span>{{product.description}}</span>
+                    </p>
+
+
                     <div class="product__details__quantity">
                         <div class="quantity">
                             <div class="pro-qty">
                                 <span class="dec qtybtn" (click)="subtractQuantity()">-</span>
                                 <input type="text" [(ngModel)]="quantity">
-                                <span class="inc qtybtn" (click)="plusQuantity()" >+</span>
+                                <span class="inc qtybtn" (click)="plusQuantity()">+</span>
                             </div>
                         </div>
                     </div>
                     <a href="javascript:void(0)" class="primary-btn" (click)="addCart(product)">THÊM VÀO GIỎ HÀNG</a>
                     <ul>
-                        <li><b>Tình trạng</b> <span>Còn hàng</span></li>
-                        <li><b>Vận chuyển</b> <span>Giao hàng trong 01 ngày. <samp>Nhận hàng miễn phí hôm nay</samp></span></li>
-                        <li><b>Cân nặng</b> <span>0.5 kg</span></li>
+                        <li><b>Số lượng : </b> <span>{{product.quantity}} </span> <span>{{product.unit}}</span></li>
+                        <li><b>Vận chuyển</b> <span>Giao hàng trong 01 ngày. <samp>Nhận hàng miễn phí hôm
+                                    nay</samp></span></li>
+
                     </ul>
                 </div>
             </div>
             <div class="col-lg-12">
-                <p-tabView >
+                <p-tabView>
                     <p-tabPanel header="Mô tả sản phẩm">
                         <div class="tab-pane">
                             <div class="product__details__tab__desc">
-                                <h4>Thông tin sản phẩm</h4>
-                                <p>{{product.description}}</p>
+                                <!-- <h4>Thông tin sản phẩm</h4>
+                                <p>{{product.description}}</p> -->
                                 <h4>Chi tiết sản phẩm</h4>
                                 <p>{{product.content}}</p>
                             </div>
@@ -80,10 +88,10 @@
 
                             </div>
                         </div>
-                        
+
                     </p-tabPanel>
                 </p-tabView>
-                
+
             </div>
         </div>
     </div>
@@ -102,16 +110,20 @@
         <div class="row">
             <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let product of listRelatedProduct">
                 <div class="featured__item">
-                    <div class="featured__item__pic set-bg" [ngStyle]="{'background-image': 'url(data:image/jpeg;base64,'+ product.images[0].data+')'}">
+                    <div class="featured__item__pic set-bg"
+                        [ngStyle]="{'background-image': 'url(data:image/jpeg;base64,'+ product.images[0].data+')'}">
                         <ul class="featured__item__pic__hover">
-                            <li><a href="javascript:void(0)" (click)="addToWishList(product)"><fa-icon [icon]="heart"></fa-icon></a></li>
-                            <li><a href="javascript:void(0)" routerLink="/product/{{product.id}}"><fa-icon [icon]="retweet"></fa-icon></a></li>
-                            <li><a href="javascript:void(0)" (click)="addToCart(product)"><fa-icon [icon]="bag"></fa-icon></a></li>
+                            <li><a href="javascript:void(0)" (click)="addToWishList(product)"><fa-icon
+                                        [icon]="heart"></fa-icon></a></li>
+                            <li><a href="javascript:void(0)" routerLink="/product/{{product.id}}"><fa-icon
+                                        [icon]="retweet"></fa-icon></a></li>
+                            <li><a href="javascript:void(0)" (click)="addToCart(product)"><fa-icon
+                                        [icon]="bag"></fa-icon></a></li>
                         </ul>
                     </div>
                     <div class="featured__item__text">
                         <h6><a href="javascript:void(0)">{{product.name}}</a></h6>
-                        <h5>{{product.price | currency}}</h5>
+                        <h5>{{product.price | currency:'VND':'symbol':'1.0-0':'vi'}}</h5>
                     </div>
                 </div>
             </div>

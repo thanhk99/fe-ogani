@@ -47,7 +47,7 @@
                         class="shadow-4" /></td>
                 <td>{{product.price | currency:'VND':'symbol':'1.0-0':'vi'}}</td>
                 <td>{{product.category}}</td>
-                <td>{{product.quantity}}</td>
+                <td>{{product.quantity}}{{product.unit}}</td>
                 <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
                         (click)="openUpdate(product)"></button>
@@ -80,7 +80,8 @@
         </div>
         <div class="field">
             <label for="content">Thông tin sản phẩm</label>
-            <textarea id="content" pInputTextarea [(ngModel)]="productForm.content" required rows="5" cols="30"></textarea>
+            <textarea id="content" pInputTextarea [(ngModel)]="productForm.content" required rows="5"
+                cols="30"></textarea>
         </div>
 
 
@@ -115,8 +116,6 @@
                 </p-dropdown>
 
             </div>
-
-
         </div>
 
         <div class="field">
@@ -159,10 +158,13 @@
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <button type="submit" pButton *ngIf="!onUpdate" (click)="createProduct()">Tạo mới</button>
-        <button type="submit" pButton *ngIf="onUpdate" (click)="updateProduct()">Cập nhật</button>
-        <button pButton type="button" class="p-button-danger ml-3" (click)="showForm=false">Hủy</button>
+        <div class="flex justify-content-start gap-2">
+            <button type="submit" pButton *ngIf="!onUpdate" (click)="createProduct()" label="Tạo mới"></button>
+            <button type="submit" pButton *ngIf="onUpdate" (click)="updateProduct()" label="Cập nhật"></button>
+            <button pButton type="button" class="p-button-danger" (click)="showForm=false" label="Hủy"></button>
+        </div>
     </ng-template>
+
 </p-dialog>
 
 <p-dialog header="Xác nhận" [(visible)]="showDelete" [style]="{width :'30vw'}" [modal]="true"

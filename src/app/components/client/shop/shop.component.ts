@@ -70,6 +70,7 @@ export class ShopComponent implements OnInit {
   getNewestProduct(){
     this.productService.getListProductNewest(4).subscribe({
       next:res =>{
+        console.log(res[0].images);
         this.listProductNewest = res;
       },error: err =>{
         console.log(err);
