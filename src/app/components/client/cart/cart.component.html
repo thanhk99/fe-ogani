@@ -40,7 +40,7 @@
                                     <h5>{{product.name}}</h5>
                                 </td>
                                 <td class="shoping__cart__price">
-                                    {{product.price | currency}}
+                                    {{product.price | currency:'VND':'symbol':'1.0-0':'vi'}}
                                 </td>
                                 <td class="shoping__cart__quantity">
                                     <div class="quantity">
@@ -52,7 +52,7 @@
                                     </div>
                                 </td>
                                 <td class="shoping__cart__total">
-                                    {{product.subTotal | currency}}
+                                    {{product.subTotal | currency:'VND':'symbol':'1.0-0':'vi'}}
                                 </td>
                                 <td class="shoping__cart__item__close">
                                     <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (click)="removeFromCart(product)"></button>
@@ -84,9 +84,9 @@
                 <div class="shoping__checkout">
                     <h5>Tổng giỏ hàng</h5>
                     <ul>
-                        <li>Tạm tính: <span>{{cartService.totalPrice | currency}}</span></li>
+                        <li>Tạm tính: <span>{{cartService.totalPrice | currency:'VND':'symbol':'1.0-0':'vi'}}</span></li>
                         <li>Giảm giá: <span>- 0%</span></li>
-                        <li>Tổng: <span>{{cartService.total | currency}}</span></li>
+                        <li>Tổng: <span>{{cartService.total | currency:'VND':'symbol':'1.0-0':'vi'}}</span></li>
                     </ul>
                     <a style="cursor: pointer;" (click)="checkoutOrder()" class="primary-btn">TIẾP TỤC ĐẾN THANH TOÁN</a>
                 </div>

@@ -28,6 +28,11 @@ export class CartComponent {
 
   removeFromCart(item:any){
     this.cartService.remove(item);
+    // set tổng tiền = 0 khi xóa sản phẩm
+    // this.cartService.totalPrice = 0;
+    // this.cartService.total = 0;
+    // this.messageService.add({severity:'success', summary: 'Thành công', detail: 'Xóa sản phẩm khỏi giỏ hàng thành công!'});
+    
   }
 
   updateQuantity(item: any,event: any){
