@@ -55,7 +55,9 @@ import localeVi from '@angular/common/locales/vi';
 import { ReportComponent } from './components/admin/report/report.component';
 import { PaymentComponent } from './components/client/payment/payment.component';
 import { PaymentResultComponent } from './components/client/payment-result/payment-result.component';
-
+import { OrderDetailSharedComponent } from './components/shared/order-detail-shared/order-detail-shared.component';
+import { AdminOrderDetailComponent } from './components/admin/order-detail/admin-order-detail.component';
+import { ClientOrderDetailComponent } from './components/client/client-order-detail/client-order-detail.component';
 registerLocaleData(localeVi);
 
 
@@ -85,6 +87,9 @@ registerLocaleData(localeVi);
     ReportComponent,
     PaymentComponent,
     PaymentResultComponent,
+    AdminOrderDetailComponent,
+    OrderDetailSharedComponent,
+    ClientOrderDetailComponent,
 
   ],
   imports: [

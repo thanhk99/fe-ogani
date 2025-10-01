@@ -31,8 +31,8 @@ export class OrderService {
 
   }
 
-  placeOrder(firstname: string, lastname: string, country: string, address: string, town: string, state: string, postCode: string, phone: string, email: string, note: string, orderDetails: OrderDetail[], username: string, paymentMethod: string):Observable<any>{
-    return this.http.post(ORDER_API +'create',{firstname,lastname,country,address,town,state,postCode,phone,email,note,orderDetails,username},httpOptions);
+  placeOrder(firstname: string, lastname: string, country: string, address: string, town: string, state: string, postCode: string, phone: string, email: string, note: string, orderDetails: OrderDetail[], username: string, payMethod: string):Observable<any>{
+    return this.http.post(ORDER_API +'create',{firstname,lastname,country,address,town,state,postCode,phone,email,note,orderDetails,username,payMethod},httpOptions);
   }
 
   setOrderId(id:any){
@@ -41,5 +41,24 @@ export class OrderService {
   
   getOrderId(){
     return this.orderId
+  }
+
+  confirmOrder(orderId: number): Observable<any> {
+    return this.http.put(ORDER_API +orderId+"/confirm", {});
+  }
+
+  shipOrder(orderId: number): Observable<any> {
+    return this.http.put(ORDER_API +orderId+"/ship", {});
+  }
+
+  completeOrder(orderId: number): Observable<any> {
+    return this.http.put(ORDER_API +orderId+"/complete", {});
+  }
+
+  getOrderDetail(orderId: number): Observable<any> {
+    return this.http.get(ORDER_API+"detail/"+orderId);
+  }
+  cancelOrder(orderId: number): Observable<any> {
+    return this.http.put(ORDER_API +orderId+"/cancel", {});
   }
 }

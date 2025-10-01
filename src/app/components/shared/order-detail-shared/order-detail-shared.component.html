@@ -1,0 +1,203 @@
+<div class="order-detail-container">
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading">
+    <p>Đang tải chi tiết đơn hàng...</p>
+  </div>
+
+  <!-- Order Detail -->
+  <div *ngIf="!isLoading && order" class="order-detail">
+    <!-- Header -->
+    <div class="detail-header">
+      <button (click)="onGoBack()" class="btn btn-back">
+        ← Quay lại
+      </button>
+      <h2>Chi tiết đơn hàng #{{order.id}}</h2>
+      <div class="header-actions">
+        <button (click)="onPrintOrder()" class="btn btn-print">
+          🖨️ In đơn hàng
+        </button>
+        
+        <!-- Admin Actions -->
+        <div *ngIf="isAdmin" class="admin-actions">
+          <!-- Nút xác nhận - chỉ hiển thị khi orderStatus là CONFIRMED -->
+          <button *ngIf="order.orderStatus === 'CONFIRMED'" 
+                  (click)="onStatusButtonClick('confirm')"
+                  [disabled]="isButtonDisabled(order.orderStatus)"
+                  class="btn btn-confirm">
+            Xác nhận đơn hàng
+          </button>
+
+          <!-- Nút bắt đầu giao - chỉ hiển thị khi orderStatus là PAID -->
+          <button *ngIf="order.orderStatus === 'PAID'" 
+                  (click)="onStatusButtonClick('ship')"
+                  [disabled]="isButtonDisabled(order.orderStatus)"
+                  class="btn btn-ship">
+            Bắt đầu giao hàng
+          </button>
+
+          <!-- Nút hoàn thành - chỉ hiển thị khi orderStatus là SHIPPING -->
+          <button *ngIf="order.orderStatus === 'SHIPPING'" 
+                  (click)="onStatusButtonClick('complete')"
+                  [disabled]="isButtonDisabled(order.orderStatus)"
+                  class="btn btn-complete">
+            Hoàn thành đơn hàng
+          </button>
+
+          <!-- Hiển thị thông báo cho các trạng thái không thể thao tác -->
+          <span *ngIf="isButtonDisabled(order.orderStatus) && order.orderStatus" class="no-action-text">
+            Không thể thao tác
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Status -->
+    <div class="status-section">
+      <div class="status-info">
+        <strong>Trạng thái:</strong>
+        <span class="status-badge" [class]="getStatusClass(order.orderStatus)">
+          {{getStatusText(order.orderStatus)}}
+        </span>
+      </div>
+    </div>
+
+    <!-- Two Columns Layout -->
+    <div class="detail-content">
+      <!-- Left Column - Customer & Order Info -->
+      <div class="left-column">
+        <!-- Customer Information -->
+        <div class="info-card">
+          <h3>Thông tin {{isAdmin ? 'khách hàng' : 'của tôi'}}</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <strong>Họ tên:</strong>
+              <span>{{getCustomerFullName()}}</span>
+            </div>
+            <div class="info-item">
+              <strong>Email:</strong>
+              <span>{{order.email || 'N/A'}}</span>
+            </div>
+            <div class="info-item">
+              <strong>Số điện thoại:</strong>
+              <span>{{order.phone || 'N/A'}}</span>
+            </div>
+            <div class="info-item">
+              <strong>Địa chỉ:</strong>
+              <span>{{order.address || 'N/A'}}</span>
+            </div>
+            <div class="info-item" *ngIf="order.town">
+              <strong>Thị trấn/Thành phố:</strong>
+              <span>{{order.town}}</span>
+            </div>
+            <div class="info-item" *ngIf="order.country">
+              <strong>Quốc gia:</strong>
+              <span>{{order.country}}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Information -->
+        <div class="info-card">
+          <h3>Thông tin đơn hàng</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <strong>Mã đơn hàng:</strong>
+              <span>#{{order.id}}</span>
+            </div>
+            <div class="info-item">
+              <strong>Tổng sản phẩm:</strong>
+              <span>{{calculateTotalQuantity()}} sản phẩm</span>
+            </div>
+            <div class="info-item">
+              <strong>Ngày đặt hàng:</strong>
+              <span>{{formatDate(order.orderDate) || 'N/A'}}</span>
+            </div>
+            <div class="info-item">
+              <strong>Ngày thanh toán:</strong>
+              <span [class]="order.orderStatus === 'PAID' ? 'payment-date paid' : 'payment-date not-paid'">
+                {{formatDate(getPaymentDate())}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Order Items & Notes -->
+      <div class="right-column">
+        <!-- Order Items -->
+        <div class="info-card">
+          <h3>Chi tiết sản phẩm ({{orderItems.length}} sản phẩm)</h3>
+          <div *ngIf="orderItems.length > 0" class="order-items">
+            <div *ngFor="let item of orderItems" class="order-item">
+              <div class="item-info">
+                <div class="item-main">
+                  <h4>{{item.name || 'Sản phẩm #' + item.productId}}</h4>
+                  <div class="item-details">
+                    <p class="item-price">Giá: {{item.price | currency:'VND':'symbol':'1.0-0'}}</p>
+                    <p class="item-quantity">Số lượng: {{item.quantity}}</p>
+                    <p class="item-id">Mã SP: {{item.productId}}</p>
+                  </div>
+                </div>
+                <div class="item-total">
+                  {{item.subTotal | currency:'VND':'symbol':'1.0-0'}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="orderItems.length === 0" class="no-items">
+            <p>Không có sản phẩm trong đơn hàng</p>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="info-card">
+          <h3>Ghi chú đơn hàng</h3>
+          <div class="notes-content">
+            <p>{{order.note || 'Không có ghi chú'}}</p>
+          </div>
+        </div>
+
+        <!-- User Information (Chỉ hiển thị cho admin) -->
+        <div class="info-card" *ngIf="isAdmin && order.user">
+          <h3>Thông tin tài khoản</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <strong>Username:</strong>
+              <span>{{order.user.username}}</span>
+            </div>
+            <div class="info-item">
+              <strong>Email:</strong>
+              <span>{{order.user.email}}</span>
+            </div>
+            <div class="info-item">
+              <strong>Vai trò:</strong>
+              <span>{{order.user.role === 'ROLE_ADMIN' ? 'Quản trị viên' : 'Người dùng'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <div class="summary-row">
+        <span>Tổng tiền hàng:</span>
+        <span>{{calculateItemsTotal() | currency:'VND':'symbol':'1.0-0'}}</span>
+      </div>
+      <div class="summary-row">
+        <span>Phí vận chuyển:</span>
+        <span>0 ₫</span>
+      </div>
+      <div class="summary-row total">
+        <strong>Tổng thanh toán:</strong>
+        <strong>{{order.totalPrice | currency:'VND':'symbol':'1.0-0'}}</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Not Found -->
+  <div *ngIf="!isLoading && !order" class="not-found">
+    <h3>Không tìm thấy đơn hàng</h3>
+    <button (click)="onGoBack()" class="btn btn-primary">Quay lại</button>
+  </div>
+</div>
