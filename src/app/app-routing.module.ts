@@ -23,6 +23,8 @@ import { RoleGuardService } from './_service/role-guard.service';
 import { ReportComponent } from './components/admin/report/report.component';
 import { PaymentComponent } from './components/client/payment/payment.component';
 import { PaymentResultComponent } from './components/client/payment-result/payment-result.component';
+import { AdminOrderDetailComponent } from './components/admin/order-detail/admin-order-detail.component';
+import { ClientOrderDetailComponent } from './components/client/client-order-detail/client-order-detail.component';
 
 
 const routes: Routes = [
@@ -34,7 +36,8 @@ const routes: Routes = [
       {path:'order',component:OrderComponent},
       {path:'blog',component:BlogComponent},
       {path:'tag',component:TagComponent},
-      {path:'report',component:ReportComponent}
+      {path:'report',component:ReportComponent},
+      {path:'order/:id' , component:AdminOrderDetailComponent}
     ]
   },
   {
@@ -51,7 +54,8 @@ const routes: Routes = [
       {path:'my-order',component:MyOrderComponent,canActivate: [AuthGuardService]},
       {path:'search/:keyword',component:SearchComponent},
       {path:'payment',component:PaymentComponent,canActivate: [AuthGuardService]},
-      {path:'payment-result',component:PaymentResultComponent,canActivate: [AuthGuardService]}
+      {path:'payment-result',component:PaymentResultComponent,canActivate: [AuthGuardService]},
+      {path:'order/:id',component:ClientOrderDetailComponent,canActivate: [AuthGuardService]}
     ]
   },
   {path:'login',component:LoginPageComponent}

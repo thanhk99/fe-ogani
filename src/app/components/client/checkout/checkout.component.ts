@@ -21,7 +21,7 @@ export class CheckoutComponent implements OnInit {
   
   showDepartment = false;
   username: string = '';
-  paymentMethod: string = ''; // Mặc định là COD
+  paymentMethod: string = 'COD'; // Mặc định là COD
   
   orderForm = {
     firstname: '',
@@ -84,7 +84,7 @@ export class CheckoutComponent implements OnInit {
       this.paymentMethod
     ).subscribe({
       next: (res) => {
-        console.log(res.OrderId)
+        console.log(res)
         this.orderService.setOrderId(res.OrderId);
         this.handleOrderSuccess(res);
       },
@@ -113,6 +113,8 @@ export class CheckoutComponent implements OnInit {
       orderDetail.price = item.price;
       orderDetail.quantity = item.quantity;
       orderDetail.subTotal = item.subTotal;
+      orderDetail.productId = item.id;
+      orderDetail.payMethod=this.paymentMethod;
       return orderDetail;
     });
   }

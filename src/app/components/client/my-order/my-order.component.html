@@ -1,4 +1,3 @@
-
 <section class="breadcrumb-section set-bg" [ngStyle]="{backgroundImage:'url(assets/image/breadcrumb.jpg'}">
     <div class="container">
         <div class="row">
@@ -6,7 +5,7 @@
                 <div class="breadcrumb__text">
                     <h2>Đơn hàng của tôi</h2>
                     <div class="breadcrumb__option">
-                        <a routerLink="/" >Trang chủ</a>
+                        <a routerLink="/">Trang chủ</a>
                         <span>Đơn hàng của tôi</span>
                     </div>
                 </div>
@@ -15,52 +14,75 @@
     </div>
 </section>
 
-<div class="card">
-    <p-table #dt [value]="listOrder" [rows]="10" [paginator]="true" [globalFilterFields]="['firstname','lastname','address']" [tableStyle]="{'min-width': '75rem'}"
-        [rowHover]="true" dataKey="id"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
-        <ng-template pTemplate="caption">
-            <div class="flex align-items-center justify-content-between">
-                <h5 class="m-0">Quản lý đơn hàng</h5>
-                <span class="p-input-icon-left">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Tìm kiếm" />`
-                </span>
-            </div>  
-        </ng-template>
-        <ng-template pTemplate="header">
-            <tr>
-                <th style="width: 4rem">
-                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                </th>
-                <th pSortableColumn="name">Khách hàng<p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="address">Địa chỉ <p-sortIcon field="address"></p-sortIcon></th>
-                <th pSortableColumn="phone">Điện thoại <p-sortIcon field="phone"></p-sortIcon></th>
-                <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
-                <th pSortableColumn="price">Tổng cộng <p-sortIcon field="price"></p-sortIcon></th>
-                <th pSortableColumn="productName">Tên mặt hàng </th>
-                <th style="min-width:10rem">Trạng thái <p-sortIcon field="status"></p-sortIcon></th>
-                <th></th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-order>
-            <tr>
-                <td style="width: 4rem">
-                    <p-tableCheckbox [value]="order"></p-tableCheckbox>
-                </td>
-                <td>{{order.firstname}} {{order.lastname}}</td>
-                <td>{{order.address}}</td>
-                <td>{{order.phone}}</td>
-                <td>{{order.email}}</td>
-                <td>{{order.totalPrice}}</td>
-                <td>
-                    <ul *ngFor="let item of order.orderItems">
-                        <li>{{item.product.name}} (x{{item.quantity}})</li>
-                    </ul>
-                </td>
-                <td><button pButton type="button" label="Đang chờ giao hàng" class="p-button-success"></button></td>
-            </tr>
-        </ng-template>
-    </p-table>
-</div>
+<!-- Order List Section -->
+<section class="order-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="order-container">
+                    <h3 class="order-title">Danh sách đơn hàng của tôi</h3>
+                    
+                    <!-- No Orders Message -->
+                    <div *ngIf="!listOrder || listOrder.length === 0" class="no-orders">
+                        <div class="no-orders-content">
+                            <i class="pi pi-shopping-bag" style="font-size: 4rem; color: #ddd;"></i>
+                            <h4>Chưa có đơn hàng nào</h4>
+                            <p>Hãy mua sắm và quay lại để xem đơn hàng của bạn!</p>
+                            <button pButton type="button" label="Mua sắm ngay" 
+                                    routerLink="/shop" 
+                                    class="p-button-primary"></button>
+                        </div>
+                    </div>
 
+                    <!-- Orders List -->
+                    <div *ngIf="listOrder && listOrder.length > 0" class="orders-list">
+                        <div *ngFor="let order of listOrder" class="order-card">
+                            <div class="order-header">
+                                <div class="order-info">
+                                    <h4>Đơn hàng #{{order.id}}</h4>
+                                    <span class="order-date">
+                                        {{order.orderDate | date:'dd/MM/yyyy HH:mm'}}
+                                    </span>
+                                </div>
+                                <div class="order-status">
+                                    <span class="status-badge" [class]="getStatusClass(order.orderStatus)">
+                                        {{getStatusText(order.orderStatus)}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="order-content">
+                                <div class="order-details">
+                                    <div class="detail-item">
+                                        <strong>Khách hàng:</strong>
+                                        <span>{{getCustomerFullName(order)}}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Địa chỉ:</strong>
+                                        <span>{{order.address || 'N/A'}}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Sản phẩm:</strong>
+                                        <span class="products-list">{{getProductNames(order)}}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Tổng tiền:</strong>
+                                        <span class="total-price">{{order.totalPrice | currency:'VND':'symbol':'1.0-0'}}</span>
+                                    </div>
+                                </div>
+
+                                <div class="order-actions">
+                                    <button pButton type="button" 
+                                            label="Xem chi tiết" 
+                                            icon="pi pi-eye"
+                                            (click)="viewOrderDetail(order.id)"
+                                            class="p-button-outlined p-button-secondary"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
