@@ -25,7 +25,7 @@ export class UserService {
   }
 
   updateProfile(username: string,firstname: string,lastname:string,email:string,country:string,state:string,address: string,phone: string):Observable<any>{
-    return this.http.put(USER_API +'update',{username,firstname,lastname,email,country,state,address,phone},httpOptions);
+    return this.http.post(USER_API +'update',{username,firstname,lastname,email,country,state,address,phone},httpOptions);
   }
 
   changePassword(username: string, oldPassword: string,newPassword: string):Observable<any>{

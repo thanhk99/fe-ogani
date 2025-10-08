@@ -305,3 +305,280 @@
     border: 1px solid #000;
   }
 }
+/* Styles cho phần đánh giá */
+.rating-status {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.reviewed, .not-reviewed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.review-badge {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stars {
+  color: #ffc107;
+}
+
+.stars .filled {
+  color: #ffc107;
+}
+
+.stars span:not(.filled) {
+  color: #e0e0e0;
+}
+
+.btn-review {
+  background-color: #ff9800;
+  color: white;
+  font-size: 12px;
+  padding: 6px 12px;
+}
+
+.btn-view-review {
+  background-color: #2196f3;
+  color: white;
+  font-size: 12px;
+  padding: 6px 12px;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  padding: 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.product-info {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.product-info h4 {
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.rating-section {
+  margin-bottom: 20px;
+}
+
+.star-rating {
+  display: flex;
+  gap: 5px;
+  margin: 10px 0;
+}
+
+.star-rating:not(.static) .star {
+  cursor: pointer;
+  font-size: 24px;
+  color: #e0e0e0;
+  transition: color 0.2s;
+}
+
+.star-rating:not(.static) .star:hover,
+.star-rating:not(.static) .star.active {
+  color: #ffc107;
+}
+
+.star-rating.static .star {
+  font-size: 20px;
+}
+
+.rating-text {
+  color: #666;
+  font-style: italic;
+}
+
+.review-section {
+  margin-bottom: 15px;
+}
+
+.review-section label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.review-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.review-content {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border-left: 4px solid #007bff;
+}
+
+.review-date {
+  color: #666;
+  font-size: 14px;
+  text-align: right;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-submit {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .reviewed, .not-reviewed {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .modal-content {
+    width: 95%;
+    margin: 20px;
+  }
+}
+/* Thêm vào CSS hiện có */
+
+.reviewer-info {
+  margin: 8px 0;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border-left: 3px solid #007bff;
+}
+
+.reviewer-info small {
+  color: #666;
+}
+
+.reviewer-info strong {
+  color: #333;
+}
+
+/* Style cho trường hợp chưa đăng nhập */
+.login-required {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 5px;
+}
+/* Đảm bảo các nút hiển thị rõ ràng */
+.btn-review {
+  background-color: #ff9800;
+  color: white;
+  font-size: 12px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-view-review {
+  background-color: #2196f3;
+  color: white;
+  font-size: 12px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-review:hover {
+  background-color: #f57c00;
+}
+
+.btn-view-review:hover {
+  background-color: #1976d2;
+}
+
+.rating-status {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.reviewed, .not-reviewed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}

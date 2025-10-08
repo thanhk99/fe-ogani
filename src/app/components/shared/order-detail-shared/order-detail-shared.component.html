@@ -127,23 +127,63 @@
         <!-- Order Items -->
         <div class="info-card">
           <h3>Chi tiết sản phẩm ({{orderItems.length}} sản phẩm)</h3>
-          <div *ngIf="orderItems.length > 0" class="order-items">
-            <div *ngFor="let item of orderItems" class="order-item">
-              <div class="item-info">
-                <div class="item-main">
-                  <h4>{{item.name || 'Sản phẩm #' + item.productId}}</h4>
-                  <div class="item-details">
-                    <p class="item-price">Giá: {{item.price | currency:'VND':'symbol':'1.0-0'}}</p>
-                    <p class="item-quantity">Số lượng: {{item.quantity}}</p>
-                    <p class="item-id">Mã SP: {{item.productId}}</p>
+          <!-- Phần hiển thị sản phẩm trong order-items -->
+        <!-- Trong phần order items -->
+        <div *ngIf="orderItems.length > 0" class="order-items">
+          <div *ngFor="let item of orderItems" class="order-item">
+            <div class="item-info">
+              <div class="item-main">
+                <h4>{{item.name || 'Sản phẩm #' + item.productId}}</h4>
+                <div class="item-details">
+                  <p class="item-price">Giá: {{item.price | currency:'VND':'symbol':'1.0-0'}}</p>
+                  <p class="item-quantity">Số lượng: {{item.quantity}}</p>
+                  <p class="item-id">Mã SP: {{item.productId}}</p>
+                </div>
+                
+                <!-- Hiển thị trạng thái đánh giá - CHỈ khi order đã COMPLETED -->
+                <div class="rating-status" *ngIf="order?.orderStatus === 'COMPLETED'">
+                  <div class="review-status-info">
+                    <small class="review-status-text">{{getReviewStatusText(item)}}</small>
+                  </div>
+                  
+                  <!-- ĐÃ ĐÁNH GIÁ - Hiển thị nút "Xem đánh giá" -->
+                  <div *ngIf="canViewReview(item)" class="reviewed">
+                    <span class="review-badge">✅ Đã đánh giá</span>
+                    <span class="review-rating">
+                      <span class="stars">
+                        <span *ngFor="let star of [1,2,3,4,5]" 
+                              [class.filled]="star <= getProductRating(item)"
+                              class="star">
+                          ★
+                        </span>
+                      </span>
+                      ({{getProductRating(item)}}/5)
+                    </span>
+                    <button (click)="viewReview(item)" class="btn btn-view-review">
+                      👁️ Xem đánh giá
+                    </button>
+                  </div>
+                  
+                  <!-- CHƯA ĐÁNH GIÁ - Hiển thị nút "Đánh giá sản phẩm" -->
+                  <div *ngIf="canReviewProduct(item)" class="not-reviewed">
+                    <button (click)="openReviewModal(item)" class="btn btn-review">
+                      ⭐ Đánh giá sản phẩm
+                    </button>
+                  </div>
+
+                  <!-- KHÔNG THỂ ĐÁNH GIÁ - Cho admin hoặc các trường hợp khác -->
+                  <div *ngIf="!canReviewProduct(item) && !canViewReview(item)" 
+                      class="cannot-review">
+                    <span class="cannot-review-text">Không thể đánh giá</span>
                   </div>
                 </div>
-                <div class="item-total">
-                  {{item.subTotal | currency:'VND':'symbol':'1.0-0'}}
-                </div>
+              </div>
+              <div class="item-total">
+                {{item.subTotal | currency:'VND':'symbol':'1.0-0'}}
               </div>
             </div>
           </div>
+        </div>
           <div *ngIf="orderItems.length === 0" class="no-items">
             <p>Không có sản phẩm trong đơn hàng</p>
           </div>
@@ -199,5 +239,107 @@
   <div *ngIf="!isLoading && !order" class="not-found">
     <h3>Không tìm thấy đơn hàng</h3>
     <button (click)="onGoBack()" class="btn btn-primary">Quay lại</button>
+  </div>
+</div>
+
+<!-- Modal đánh giá sản phẩm -->
+<div *ngIf="showReviewModal" class="modal-overlay" (click)="closeReviewModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Đánh giá sản phẩm</h3>
+      <button class="modal-close" (click)="closeReviewModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="product-info">
+        <h4>{{selectedProduct?.name}}</h4>
+        <p>Mã sản phẩm: {{selectedProduct?.productId}}</p>
+        <div class="reviewer-info">
+          <small>Đánh giá dưới tên: <strong>{{getReviewerName()}}</strong></small>
+        </div>
+        <p class="review-warning">⚠️ Bạn chỉ có thể đánh giá sản phẩm này một lần</p>
+      </div>
+      
+      <div class="rating-section">
+        <label>Đánh giá của bạn: <span class="required">*</span></label>
+        <div class="star-rating">
+          <span *ngFor="let star of [1,2,3,4,5]" 
+                (click)="setRating(star)"
+                [class.active]="star <= currentRating"
+                class="star">
+            ★
+          </span>
+        </div>
+        <div class="rating-text">
+          {{currentRating > 0 ? getRatingText(currentRating) : 'Vui lòng chọn số sao'}}
+        </div>
+      </div>
+      
+      <div class="review-section">
+        <label for="reviewComment">Nhận xét chi tiết:</label>
+        <textarea 
+          id="reviewComment"
+          [value]="reviewComment"
+          (input)="onReviewCommentChange($event)"
+          placeholder="Hãy chia sẻ cảm nhận của bạn về sản phẩm..."
+          rows="4"
+          class="review-textarea">
+        </textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="closeReviewModal()" class="btn btn-cancel">Hủy</button>
+      <button (click)="onSubmitReview()" 
+              [disabled]="currentRating === 0 || isSubmittingReview || !isUserLoggedIn()"
+              class="btn btn-submit">
+        {{isSubmittingReview ? 'Đang gửi...' : 'Gửi đánh giá'}}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xem đánh giá (giữ nguyên) -->
+<div *ngIf="showViewReviewModal" class="modal-overlay" (click)="closeViewReviewModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Đánh giá của bạn</h3>
+      <button class="modal-close" (click)="closeViewReviewModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="product-info">
+        <h4>{{viewingReviewProduct?.name}}</h4>
+        <p>Mã sản phẩm: {{viewingReviewProduct?.productId}}</p>
+        <div class="reviewer-info">
+          <small>Đánh giá bởi: <strong>{{viewingReview?.reviewerName || 'Ẩn danh'}}</strong></small>
+        </div>
+      </div>
+      
+      <div class="rating-section">
+        <label>Đánh giá:</label>
+        <div class="star-rating static">
+          <span *ngFor="let star of [1,2,3,4,5]" 
+                [class.active]="star <= viewingReview?.rating"
+                class="star">
+            ★
+          </span>
+        </div>
+        <div class="rating-text">
+          {{getRatingText(viewingReview?.rating)}}
+        </div>
+      </div>
+      
+      <div class="review-section">
+        <label>Nhận xét:</label>
+        <div class="review-content">
+          {{viewingReview?.comment || 'Không có nhận xét'}}
+        </div>
+      </div>
+      
+      <div class="review-date" *ngIf="viewingReview?.createdAt">
+        Đánh giá ngày: {{formatDate(viewingReview.createdAt)}}
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="closeViewReviewModal()" class="btn btn-primary">Đóng</button>
+    </div>
   </div>
 </div>
