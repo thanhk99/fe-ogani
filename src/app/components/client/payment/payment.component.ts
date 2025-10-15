@@ -33,12 +33,11 @@ export class PaymentComponent implements OnInit {
   }
 
   loadPaymentData(): void {
-    this.paymentData.amount =  this.cartService.getTotalPrice()
     this.paymentData.orderCode = this.orderService.getOrderId()
     if(this.paymentData.amount ===0 ){
       const data = sessionStorage.getItem("paymentData")
       if(data)
-      this.paymentData = JSON.parse(data).amount
+      this.paymentData = JSON.parse(data)
     }
     console.log(this.paymentData.amount)
   }

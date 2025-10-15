@@ -120,7 +120,6 @@ export class CheckoutComponent implements OnInit {
   }
 
   private handleOrderSuccess(response: any): void {
-    this.cartService.clearCart();
     this.messageService.add({ 
       severity: 'success', 
       summary: 'Thành công', 
@@ -147,9 +146,10 @@ export class CheckoutComponent implements OnInit {
   }
 
   private navigateToPayment(orderResponse: any): void {
-    const totalAmount = this.cartService.getTotalPrice();
-    const orderCode = orderResponse.orderCode || this.generateOrderCode();
-    
+    const orderCode = orderResponse.OrderId || this.generateOrderCode();
+    console.log(orderResponse)
+    this.cartService.calculateTotal();
+    const totalAmount = this.cartService.getTotal();
     const paymentData = {
       orderCode: orderCode,
       amount: totalAmount,
@@ -159,7 +159,7 @@ export class CheckoutComponent implements OnInit {
     };
 
     sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
-    
+    this.cartService.clearCart();
     this.router.navigate(['/payment'], {
       queryParams: {
         orderCode: paymentData.orderCode,

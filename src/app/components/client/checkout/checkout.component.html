@@ -94,8 +94,6 @@
                             <ul>
                                 <li *ngFor="let item of cartService.items">{{item.name}} <span>{{item.subTotal | currency}}</span></li>
                             </ul>
-                            <div class="checkout__order__subtotal">Tạm tính <span>{{cartService.totalPrice | currency}}</span></div>
-                            <div class="checkout__order__sale">Giảm giá <span>0%</span></div>
                             <div class="checkout__order__total">Tổng <span>{{cartService.total | currency }}</span></div>
                             <p>Lorem ipsum dolor sit amet, consectetur adip elit, sed do eiusmod tempor incididunt
                                 ut labore et dolore magna aliqua.</p>
