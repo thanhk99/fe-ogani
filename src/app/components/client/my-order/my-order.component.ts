@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrderService } from 'src/app/_service/order.service';
 import { StorageService } from 'src/app/_service/storage.service';
 import { Router } from '@angular/router';
+import { CartService } from 'src/app/_service/cart.service';
 
 @Component({
   selector: 'app-my-order',
@@ -24,6 +25,7 @@ export class MyOrderComponent implements OnInit {
   constructor(
     private orderService: OrderService,
     private storageService: StorageService,
+    private cartService: CartService,
     private router: Router
   ) {}
 
@@ -71,5 +73,40 @@ export class MyOrderComponent implements OnInit {
       `${item.product?.name || item.name} (x${item.quantity})`
     );
     return productNames.join(', ');
+  }
+
+  // Phương thức tiếp tục thanh toán
+  continuePayment(order: any): void {
+    if (!order || !order.id) {
+      console.error('Order không hợp lệ');
+      return;
+    }
+
+    // Tạo dữ liệu thanh toán từ đơn hàng
+    const paymentData = {
+      orderCode: `ORD${order.id}`,
+      amount: order.totalPrice,
+      orderInfo: `Thanh toán đơn hàng #${order.id}`,
+      orderType: 'other',
+      orderId: order.id
+    };
+
+    // Lưu thông tin thanh toán vào sessionStorage
+    sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
+
+    // Chuyển đến trang thanh toán
+    this.router.navigate(['/payment'], {
+      queryParams: {
+        orderCode: paymentData.orderCode,
+        amount: paymentData.amount,
+        orderInfo: paymentData.orderInfo,
+        fromOrder: true // Thêm flag để biết là tiếp tục thanh toán từ đơn hàng
+      }
+    });
+  }
+
+  // Kiểm tra xem đơn hàng có thể tiếp tục thanh toán không
+  canContinuePayment(order: any): boolean {
+    return order && order.orderStatus === 'PENDING';
   }
 }

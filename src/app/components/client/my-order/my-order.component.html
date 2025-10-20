@@ -77,6 +77,14 @@
                                             icon="pi pi-eye"
                                             (click)="viewOrderDetail(order.id)"
                                             class="p-button-outlined p-button-secondary"></button>
+                                    
+                                    <!-- Nút tiếp tục thanh toán - chỉ hiển thị cho đơn hàng PENDING -->
+                                    <button *ngIf="canContinuePayment(order)" 
+                                            pButton type="button" 
+                                            label="Tiếp tục thanh toán" 
+                                            icon="pi pi-credit-card"
+                                            (click)="continuePayment(order)"
+                                            class="p-button-success"></button>
                                 </div>
                             </div>
                         </div>

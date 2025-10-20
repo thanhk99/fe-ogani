@@ -55,15 +55,6 @@ export class PaymentResultComponent implements OnInit {
         const responseCode = params['vnp_ResponseCode'];
         const transactionStatus = params['vnp_TransactionStatus'];
         const secureHash = params['vnp_SecureHash'];
-
-        // Kiểm tra chữ ký bảo mật (nếu cần)
-        if (!this.validateSecureHash(params)) {
-          this.paymentStatus = 'invalid_signature';
-          this.message = 'Chữ ký bảo mật không hợp lệ';
-          this.isLoading = false;
-          return;
-        }
-
         // Xác định trạng thái thanh toán
         if (responseCode === '00' && transactionStatus === '00') {
           this.paymentStatus = 'success';
@@ -100,14 +91,6 @@ export class PaymentResultComponent implements OnInit {
         this.isLoading = false;
       }
     });
-  }
-
-  // Phương thức kiểm tra chữ ký bảo mật (cần implement theo logic của VNPay)
-  private validateSecureHash(params: any): boolean {
-    // TODO: Implement logic xác thực chữ ký bảo mật VNPay
-    // Trong môi trường thực tế, bạn cần xác thực secure hash
-    // Tạm thời return true cho môi trường development
-    return true;
   }
 
   // Phương thức lấy thông báo lỗi dựa trên response code
