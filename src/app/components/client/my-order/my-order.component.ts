@@ -84,9 +84,9 @@ export class MyOrderComponent implements OnInit {
 
     // Tạo dữ liệu thanh toán từ đơn hàng
     const paymentData = {
-      orderCode: `ORD${order.id}`,
+      orderCode: order.id,
       amount: order.totalPrice,
-      orderInfo: `Thanh toán đơn hàng #${order.id}`,
+      orderInfo: `Thanh toán đơn hàng $${order.id}`,
       orderType: 'other',
       orderId: order.id
     };

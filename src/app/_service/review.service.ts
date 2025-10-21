@@ -31,9 +31,9 @@ export class ReviewService {
     getReviewsByOrder(orderId: number): Observable<any[]> {
         return this.http.get<any[]>(`${this.apiUrl}/order/${orderId}`);
     }
-//   getReview(reviewId: number): Observable<Review> {
-//     return this.http.get<Review>(`${this.apiUrl}/${reviewId}`);
-//   }
+    getReviewByProductId(productId: number) {
+      return this.http.get(`${this.apiUrl}/${productId}`);
+    }
 
 //   getReviewByProductAndOrder(productId: number, orderId: number): Observable<Review> {
 //     return this.http.get<Review>(`${this.apiUrl}/product/${productId}/order/${orderId}`);
