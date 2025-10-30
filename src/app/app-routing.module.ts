@@ -25,12 +25,12 @@ import { PaymentComponent } from './components/client/payment/payment.component'
 import { PaymentResultComponent } from './components/client/payment-result/payment-result.component';
 import { AdminOrderDetailComponent } from './components/admin/order-detail/admin-order-detail.component';
 import { ClientOrderDetailComponent } from './components/client/client-order-detail/client-order-detail.component';
-
-
+import { RevenueComponent } from './components/admin/revenue/revenue.component';
 const routes: Routes = [
   {
     path: 'admin',component:DashboardComponent,canActivate: [RoleGuardService],data: {expectedRole: "ROLE_ADMIN"},
     children:[
+      { path: '', component: RevenueComponent },
       {path:"category",component: CategoryComponent},
       {path:'product',component:ProductComponent},
       {path:'order',component:OrderComponent},
