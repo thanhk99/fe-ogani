@@ -11,6 +11,7 @@ export class StorageService {
 
   clean():void{
     window.sessionStorage.clear();
+    window.localStorage.clear();
   }
 
 

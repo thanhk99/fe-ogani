@@ -1,4 +1,3 @@
-
 <p-toast></p-toast>
 
 <section>
@@ -23,8 +22,9 @@
 <section class="categories">
     <div class="container">
         <div class="row">
-            <p-carousel [value]="category_items" [numScroll]="1" [numVisible]="4" [circular]="true" [showIndicators]="false" [autoplayInterval]="4000">       
-                <ng-template let-item pTemplate="item" >
+            <p-carousel [value]="category_items" [numScroll]="1" [numVisible]="4" [circular]="true"
+                [showIndicators]="false" [autoplayInterval]="4000">
+                <ng-template let-item pTemplate="item">
                     <div class="col">
                         <div class="categories__item set-bg" [ngStyle]="{'background-image': 'url('+ item.src +')'}">
                             <h5><a href="javascript:void(0)">{{item.title}}</a></h5>
@@ -50,16 +50,20 @@
         <div class="row featured__filter">
             <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let product of listProductNewest">
                 <div class="featured__item">
-                    <div class="featured__item__pic set-bg" [ngStyle]="{'background-image': 'url(data:image/jpeg;base64,'+ product.images.data+')'}">
+                    <div class="featured__item__pic set-bg"
+                        [ngStyle]="{'background-image': 'url(data:image/jpeg;base64,'+ product.images[0].data+')'}">
                         <ul class="featured__item__pic__hover">
-                            <li><a href="javascript:void(0)" (click)="addToWishList(product)"><fa-icon [icon]="heart"></fa-icon></a></li>
-                            <li><a href="javascript:void(0)" routerLink="/product/{{product.id}}"><fa-icon [icon]="retweet"></fa-icon></a></li>
-                            <li><a href="javascript:void(0)" (click)="addToCart(product)"><fa-icon [icon]="bag"></fa-icon></a></li>
+                            <li><a href="javascript:void(0)" (click)="addToWishList(product)"><fa-icon
+                                        [icon]="heart"></fa-icon></a></li>
+                            <li><a href="javascript:void(0)" routerLink="/product/{{product.id}}"><fa-icon
+                                        [icon]="retweet"></fa-icon></a></li>
+                            <li><a href="javascript:void(0)" (click)="addToCart(product)"><fa-icon
+                                        [icon]="bag"></fa-icon></a></li>
                         </ul>
                     </div>
                     <div class="featured__item__text">
                         <h6><a href="javascript:void(0)">{{product.name}}</a></h6>
-                        <h5>{{product.price | currency}}</h5>
+                        <h5>{{ product.price | currency:'VND':'symbol':'1.0-0':'vi-VN' }}</h5>
                     </div>
                 </div>
             </div>
@@ -100,16 +104,21 @@
         <div class="row featured__filter">
             <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let product of listProductPrice">
                 <div class="featured__item">
-                    <div class="featured__item__pic set-bg" [ngStyle]="{'background-image': 'url(data:image/jpeg;base64,'+ product.images.data+')'}">
+                    <div class="featured__item__pic set-bg"
+                        [ngStyle]="{'background-image': 'url(data:image/jpeg;base64,'+ product.images[0].data+')'}">
                         <ul class="featured__item__pic__hover">
-                            <li><a href="javascript:void(0)" (click)="addToWishList(product)"><fa-icon [icon]="heart"></fa-icon></a></li>
-                            <li><a href="javascript:void(0)" routerLink="/product/{{product.id}}"><fa-icon [icon]="retweet"></fa-icon></a></li>
-                            <li><a href="javascript:void(0)" (click)="addToCart(product)"><fa-icon [icon]="bag"></fa-icon></a></li>
+                            <li><a href="javascript:void(0)" (click)="addToWishList(product)"><fa-icon
+                                        [icon]="heart"></fa-icon></a></li>
+                            <li><a href="javascript:void(0)" routerLink="/product/{{product.id}}"><fa-icon
+                                        [icon]="retweet"></fa-icon></a></li>
+                            <li><a href="javascript:void(0)" (click)="addToCart(product)"><fa-icon
+                                        [icon]="bag"></fa-icon></a></li>
                         </ul>
                     </div>
                     <div class="featured__item__text">
                         <h6><a href="javascript:void(0)">{{product.name}}</a></h6>
-                        <h5>{{product.price | currency}}</h5>
+                        <h5>{{ product.price | currency:'VND':'symbol':'1.0-0':'vi-VN' }}</h5>
+
                     </div>
                 </div>
             </div>

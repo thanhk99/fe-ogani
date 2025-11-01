@@ -112,7 +112,7 @@
                                             </div>
                                             <div class="cart-box-text">
                                                 <a href="javascript:void(0)">{{product.name}}</a>
-                                                <div><span>{{product.quantity}} x </span>{{product.price | currency}}</div>
+                                                <div><span>{{product.quantity}} x </span>{{product.price | currency:'VND':'symbol':'1.0-0':'vi-VN'}}</div>
                                             </div>
                                             <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (click)="removeFromCart(product)"></button>
                                         </li>
