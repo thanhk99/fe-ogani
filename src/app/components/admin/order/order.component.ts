@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from 'src/app/_service/order.service';
 import { Router } from '@angular/router';
+import { OrderSocketService } from 'src/app/_service/order-socket.service';
+import { Subscription } from 'rxjs';
+import { Order } from 'src/app/_class/order';
+
+
 
 @Component({
   selector: 'app-order',
@@ -10,6 +15,8 @@ import { Router } from '@angular/router';
 export class OrderComponent implements OnInit {
 
   listOrder: any[] = [];
+  private subscriptions: Subscription[] = [];
+
   statusMap: { [key: string]: string } = {
     'PENDING': 'Đang chờ thanh toán VNPay',
     'PAID': 'Đã thanh toán',
@@ -19,10 +26,40 @@ export class OrderComponent implements OnInit {
     'CANCELLED': 'Đã huỷ'
   };
 
-  constructor(private orderService: OrderService , private router : Router) { }
+  constructor(
+    private orderService: OrderService,
+    private router: Router,
+    private order: OrderSocketService,
+    // private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
+    this.order.connect(); // Kết nối WS khi component init
+
+    // Subscribe thông báo mới (hiển thị toast)
+    const notifSub = this.order.getNewOrderNotifications().subscribe((data) => {
+      // this.messageService.add({
+      //   severity: 'info', // Hoặc 'success' nếu muốn xanh, tùy theo theme
+      //   summary: `Order ${data.orderId}`,
+      //   detail: data.message
+      // });
+    });
+
+    // Subscribe update orders (thêm vào list mà không reload)
+    const updateSub = this.order.getOrderUpdates().subscribe((newOrder: Order) => {
+      this.listOrder = [...this.listOrder, newOrder]; // Add vào array (trigger change detection)
+      console.log('New order added:', newOrder);
+    });
+
+    this.subscriptions.push(notifSub, updateSub);
+
+    // Load initial orders từ API (nếu cần)
     this.getListOrder();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.order.disconnect();
   }
 
   getListOrder() {

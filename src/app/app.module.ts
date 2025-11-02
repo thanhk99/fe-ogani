@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -58,6 +59,11 @@ import { PaymentResultComponent } from './components/client/payment-result/payme
 import { OrderDetailSharedComponent } from './components/shared/order-detail-shared/order-detail-shared.component';
 import { AdminOrderDetailComponent } from './components/admin/order-detail/admin-order-detail.component';
 import { ClientOrderDetailComponent } from './components/client/client-order-detail/client-order-detail.component';
+import { HighchartsChartModule } from 'highcharts-angular';
+import { RevenueComponent } from './components/admin/revenue/revenue.component';
+import { NgChartsModule } from 'ng2-charts';
+import { ForgotpasswordComponent } from './components/client/forgotpassword/forgotpassword.component';
+
 registerLocaleData(localeVi);
 
 
@@ -90,6 +96,8 @@ registerLocaleData(localeVi);
     AdminOrderDetailComponent,
     OrderDetailSharedComponent,
     ClientOrderDetailComponent,
+    ForgotpasswordComponent,
+    // RevenueComponent
 
   ],
   imports: [
@@ -122,7 +130,10 @@ registerLocaleData(localeVi);
     MultiSelectModule,
     CommonModule,
     DropdownModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HighchartsChartModule,
+    RouterModule.forRoot([]),
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
