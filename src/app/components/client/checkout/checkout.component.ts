@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { CartService } from 'src/app/_service/cart.service';
 import { OrderService } from 'src/app/_service/order.service';
 import { StorageService } from 'src/app/_service/storage.service';
+import { NotificationService } from 'src/app/_service/notification.service'; // Thêm service mới
 
 @Component({
   selector: 'app-checkout',
@@ -21,8 +22,8 @@ export class CheckoutComponent implements OnInit {
   
   showDepartment = false;
   username: string = '';
-  paymentMethod: string = 'COD'; // Mặc định là COD
-  
+  paymentMethod: string = 'COD';
+
   orderForm = {
     firstname: '',
     lastname: '',
@@ -41,7 +42,8 @@ export class CheckoutComponent implements OnInit {
     private orderService: OrderService,
     private storageService: StorageService,
     public messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService // Thêm service
   ) {}
 
   ngOnInit(): void {
@@ -84,12 +86,39 @@ export class CheckoutComponent implements OnInit {
       this.paymentMethod
     ).subscribe({
       next: (res) => {
-        console.log(res)
+        console.log('Order response:', res);
         this.orderService.setOrderId(res.OrderId);
+        
+        // Gửi thông báo đến admin
+        this.notifyAdminAboutNewOrder(res);
+        
         this.handleOrderSuccess(res);
       },
       error: (err) => {
         this.handleOrderError(err);
+      }
+    });
+  }
+
+  // Gửi thông báo đến admin về đơn hàng mới
+  private notifyAdminAboutNewOrder(orderResponse: any): void {
+    const notification = {
+      type: 'NEW_ORDER',
+      message: `🆕 Có đơn hàng mới #${orderResponse.OrderId || orderResponse.id} từ ${this.orderForm.firstname} ${this.orderForm.lastname}`,
+      orderId: orderResponse.OrderId || orderResponse.id,
+      customerName: `${this.orderForm.firstname} ${this.orderForm.lastname}`,
+      totalAmount: this.cartService.getTotal(),
+      paymentMethod: this.paymentMethod,
+      timestamp: new Date().toISOString()
+    };
+
+    // Gửi thông báo qua service
+    this.notificationService.notifyAdmin(notification).subscribe({
+      next: () => {
+        console.log('✅ Notification sent to admin');
+      },
+      error: (err) => {
+        console.error('❌ Failed to send notification:', err);
       }
     });
   }
@@ -114,7 +143,7 @@ export class CheckoutComponent implements OnInit {
       orderDetail.quantity = item.quantity;
       orderDetail.subTotal = item.subTotal;
       orderDetail.productId = item.id;
-      orderDetail.payMethod=this.paymentMethod;
+      orderDetail.payMethod = this.paymentMethod;
       return orderDetail;
     });
   }
@@ -125,6 +154,9 @@ export class CheckoutComponent implements OnInit {
       summary: 'Thành công', 
       detail: 'Đặt hàng thành công!' 
     });
+
+    // Xóa giỏ hàng sau khi đặt hàng thành công
+    this.cartService.clearCart();
 
     // Chuyển hướng theo phương thức thanh toán
     setTimeout(() => {
@@ -147,7 +179,8 @@ export class CheckoutComponent implements OnInit {
 
   private navigateToPayment(orderResponse: any): void {
     const orderCode = orderResponse.OrderId || this.generateOrderCode();
-    console.log(orderResponse)
+    console.log(orderResponse);
+    
     this.cartService.calculateTotal();
     const totalAmount = this.cartService.getTotal();
     const paymentData = {
@@ -159,7 +192,6 @@ export class CheckoutComponent implements OnInit {
     };
 
     sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
-    this.cartService.clearCart();
     this.router.navigate(['/payment'], {
       queryParams: {
         orderCode: paymentData.orderCode,

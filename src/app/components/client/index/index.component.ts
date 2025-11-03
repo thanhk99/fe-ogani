@@ -132,6 +132,9 @@ export class IndexComponent implements OnInit {
     })
   }
 
+  forgot():void{
+    this.router.navigate(["/forgot"])
+  }
   register():void{
     const {username,email,password} = this.registerForm;
     console.log(this.registerForm);
