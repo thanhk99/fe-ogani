@@ -158,9 +158,9 @@ export class CheckoutComponent implements OnInit {
       orderId: orderResponse.id || orderResponse.orderId
     };
 
-    sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
-    this.cartService.clearCart();
-    this.router.navigate(['/payment'], {
+    sessionStorage.setItem('paymentData', JSON.stringify(paymentData));// lưu vào session
+    this.cartService.clearCart();// xóa dữ liệu trong cart
+    this.router.navigate(['/payment'], { // chuyển đến trang thanh toán VNPay
       queryParams: {
         orderCode: paymentData.orderCode,
         amount: paymentData.amount,
