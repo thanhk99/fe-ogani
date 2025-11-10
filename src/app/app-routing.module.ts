@@ -27,6 +27,8 @@ import { AdminOrderDetailComponent } from './components/admin/order-detail/admin
 import { ClientOrderDetailComponent } from './components/client/client-order-detail/client-order-detail.component';
 import { RevenueComponent } from './components/admin/revenue/revenue.component';
 import { ForgotpasswordComponent } from './components/client/forgotpassword/forgotpassword.component';
+import { ResetPasswordComponent } from './components/client/reset-password/reset-password.component';
+import { ChangePasswordComponent } from './components/client/change-password/change-password.component';
 const routes: Routes = [
   {
     path: 'admin',component:DashboardComponent,canActivate: [RoleGuardService],data: {expectedRole: "ROLE_ADMIN"},
@@ -57,7 +59,9 @@ const routes: Routes = [
       {path:'payment',component:PaymentComponent,canActivate: [AuthGuardService]},
       {path:'payment-result',component:PaymentResultComponent,canActivate: [AuthGuardService]},
       {path:'order/:id',component:ClientOrderDetailComponent,canActivate: [AuthGuardService]},
-      {path:'forgot',component:ForgotpasswordComponent}
+      {path:'forgot',component:ForgotpasswordComponent},
+      {path:'reset-password',component:ResetPasswordComponent},
+      {path:'change-password',component:ChangePasswordComponent}
     ]
   },
   {path:'login',component:LoginPageComponent}

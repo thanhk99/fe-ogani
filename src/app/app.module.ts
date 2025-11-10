@@ -63,6 +63,8 @@ import { HighchartsChartModule } from 'highcharts-angular';
 import { RevenueComponent } from './components/admin/revenue/revenue.component';
 import { NgChartsModule } from 'ng2-charts';
 import { ForgotpasswordComponent } from './components/client/forgotpassword/forgotpassword.component';
+import { ResetPasswordComponent } from './components/client/reset-password/reset-password.component';
+import { ChangePasswordComponent } from './components/client/change-password/change-password.component';
 
 registerLocaleData(localeVi);
 
@@ -97,6 +99,8 @@ registerLocaleData(localeVi);
     OrderDetailSharedComponent,
     ClientOrderDetailComponent,
     ForgotpasswordComponent,
+    ResetPasswordComponent,
+    ChangePasswordComponent,
     // RevenueComponent
 
   ],

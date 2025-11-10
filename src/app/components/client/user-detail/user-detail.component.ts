@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { StorageService } from 'src/app/_service/storage.service';
 import { UserService } from 'src/app/_service/user.service';
+
+
 
 @Component({
   selector: 'app-user-detail',
@@ -29,7 +32,11 @@ export class UserDetailComponent implements OnInit {
     newPassword: null
   }
 
-  constructor(private storageService: StorageService,private userService: UserService){}
+  constructor(
+    private storageService: StorageService,
+    private userService: UserService,
+    private messageService: MessageService
+  ){}
 
   ngOnInit(): void {
     this.username = this.storageService.getUser().username;
@@ -59,6 +66,7 @@ export class UserDetailComponent implements OnInit {
     this.userService.updateProfile(this.username,firstname,lastname,email,country,state,address,phone).subscribe({
       next: res =>{
         this.getUser();
+        this.messageService.add({severity:'success', summary: 'Thành công', detail: 'Cập nhật thông tin thành công!'});
       },error: err=>{
         console.log(err);
       }

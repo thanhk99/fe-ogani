@@ -111,4 +111,14 @@ export class CartService {
   getTotal() {
     return this.total;
   }
+
+ checkOrder(): Observable<any> {
+  const orderItems = this.items.map(item => ({
+    productId: item.id,
+    quantity: item.quantity,
+  }));
+
+  return this.http.post(ORDER_API + 'check', orderItems);
+}
+
 }

@@ -1,21 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { OrderService } from 'src/app/_service/order.service';
 import { Router } from '@angular/router';
-import { OrderSocketService } from 'src/app/_service/order-socket.service';
 import { Subscription } from 'rxjs';
-import { Order } from 'src/app/_class/order';
+import { isPlatformBrowser } from '@angular/common';
+import { MessageService } from 'primeng/api';
+import Swal from 'sweetalert2';
+
+
 
 
 
 @Component({
   selector: 'app-order',
+
   templateUrl: './order.component.html',
-  styleUrls: ['./order.component.css']
+  styleUrls: ['./order.component.css'],
+  providers: [MessageService]
 })
-export class OrderComponent implements OnInit {
+export class OrderComponent implements OnInit, OnDestroy {
 
   listOrder: any[] = [];
-  private subscriptions: Subscription[] = [];
+  filteredOrders: any[] = [];
+  paginatedOrders: any[] = [];
+
+  // Phân trang
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 0;
+
+  // Lọc
+  selectedStatus: string = '';
+  searchTerm: string = '';
+
+  // Thống kê
+  statusStats: { [key: string]: number } = {};
+
+  // SSE
+  private eventSource: EventSource | null = null;
+  private sseUrl = 'http://localhost:8080/api/sse/subscribe/';
+  private userId: number = 1; // ID của admin
+  private reconnectInterval: any;
+  private isConnected: boolean = false;
 
   statusMap: { [key: string]: string } = {
     'PENDING': 'Đang chờ thanh toán VNPay',
@@ -29,50 +54,288 @@ export class OrderComponent implements OnInit {
   constructor(
     private orderService: OrderService,
     private router: Router,
-    private order: OrderSocketService,
-    // private messageService: MessageService
+    private messageService: MessageService,
+    @Inject(PLATFORM_ID) private platformId: any
   ) { }
 
   ngOnInit(): void {
-    this.order.connect(); // Kết nối WS khi component init
-
-    // Subscribe thông báo mới (hiển thị toast)
-    const notifSub = this.order.getNewOrderNotifications().subscribe((data) => {
-      // this.messageService.add({
-      //   severity: 'info', // Hoặc 'success' nếu muốn xanh, tùy theo theme
-      //   summary: `Order ${data.orderId}`,
-      //   detail: data.message
-      // });
-    });
-
-    // Subscribe update orders (thêm vào list mà không reload)
-    const updateSub = this.order.getOrderUpdates().subscribe((newOrder: Order) => {
-      this.listOrder = [...this.listOrder, newOrder]; // Add vào array (trigger change detection)
-      console.log('New order added:', newOrder);
-    });
-
-    this.subscriptions.push(notifSub, updateSub);
-
-    // Load initial orders từ API (nếu cần)
     this.getListOrder();
+
+    if (isPlatformBrowser(this.platformId)) {
+      this.connectToSSE();
+    }
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-    this.order.disconnect();
+    this.closeSSEConnection();
+    if (this.reconnectInterval) {
+      clearInterval(this.reconnectInterval);
+    }
   }
 
-  getListOrder() {
-    this.orderService.getListOrder().subscribe({
-      next: res => {
-        this.listOrder = res || [];
-        console.log('Danh sách đơn hàng:', this.listOrder);
-      }, error: err => {
-        console.log('Lỗi khi lấy danh sách đơn hàng:', err);
+
+  // Kết nối SSE 
+  connectToSSE(): void {
+    try {
+      this.closeSSEConnection();
+      const user = window.sessionStorage.getItem("auth-user");
+      if (user) {
+        this.userId = JSON.parse(user).userId;
+      }
+      this.eventSource = new EventSource(`${this.sseUrl}${this.userId}`);
+      this.isConnected = false;
+
+      this.eventSource.onopen = (event) => {
+        this.isConnected = true;
+      };
+
+      // Lắng nghe sự kiện thông báo mới
+      this.eventSource.addEventListener('notification', (event: MessageEvent) => {
+        try {
+          const notification = JSON.parse(event.data);
+          this.handleNewNotification(notification);
+        } catch (error) {
+          // Không xử lý lỗi
+        }
+      });
+
+      this.eventSource.onerror = (error) => {
+        this.isConnected = false;
+        this.handleSSEError();
+      };
+
+      // Tự động reconnect sau 10 giây nếu mất kết nối
+      this.startAutoReconnect();
+
+    } catch (error) {
+      this.handleSSEError();
+    }
+  }
+
+  // Xử lý thông báo mới
+  private handleNewNotification(notification: any): void {
+    if (notification.type === 'NEW_ORDER') {
+      // Hiển thị alert thông báo đơn hàng mới
+      this.showNewOrderAlert(notification);
+
+      // Tải lại danh sách đơn hàng
+      setTimeout(() => {
+        this.refreshOrderList();
+      }, 1000);
+    }
+  }
+
+  private showNewOrderAlert(notification: any): void {
+    const message = notification.message || 'Có đơn hàng mới!';
+
+    Swal.fire({
+      title: '📦 Đơn hàng mới!',
+      text: message,
+      icon: 'success',
+      showConfirmButton: true,
+      confirmButtonText: 'Xem ngay',
+      confirmButtonColor: '#3085d6',
+      background: '#f9f9f9',
+      color: '#333',
+      timer: 5000,
+      timerProgressBar: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/admin/order', notification.orderId]);
       }
     });
   }
 
+
+  // Tải lại danh sách đơn hàng
+  private refreshOrderList(): void {
+    this.orderService.getListOrder().subscribe({
+      next: (res) => {
+        this.listOrder = res || [];
+        this.applyFilters();
+      },
+      error: (err) => {
+        // Không xử lý lỗi
+      }
+    });
+  }
+
+  // Xử lý lỗi SSE
+  private handleSSEError(): void {
+    // Không hiển thị thông báo lỗi
+  }
+
+  // Tự động reconnect
+  private startAutoReconnect(): void {
+    if (this.reconnectInterval) {
+      clearInterval(this.reconnectInterval);
+    }
+
+    this.reconnectInterval = setInterval(() => {
+      if (!this.isConnected) {
+        this.connectToSSE();
+      }
+    }, 10000);
+  }
+
+  // Đóng kết nối SSE
+  private closeSSEConnection(): void {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = null;
+      this.isConnected = false;
+    }
+  }
+
+  // Manual reconnect
+  manualReconnect(): void {
+    this.connectToSSE();
+  }
+
+  // Kiểm tra trạng thái kết nối
+  get connectionStatus(): string {
+    return this.isConnected ? 'connected' : 'disconnected';
+  }
+
+  getListOrder(keepPage: boolean = false): void {
+    const currentPageBeforeReload = this.currentPage; // lưu trang hiện tại
+
+    this.orderService.getListOrder().subscribe({
+      next: res => {
+        this.listOrder = res || [];
+        this.applyFilters(keepPage, currentPageBeforeReload);
+      },
+      error: err => {
+        this.showToast('error', 'Lỗi', 'Không thể tải danh sách đơn hàng');
+      }
+    });
+  }
+
+
+  applyFilters(keepPage: boolean = false, previousPage: number = 1): void {
+    let filtered = this.listOrder;
+
+    // Lọc trạng thái
+    if (this.selectedStatus) {
+      filtered = filtered.filter(order => order.orderStatus === this.selectedStatus);
+    }
+
+    // Lọc tìm kiếm
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(order =>
+        (order.id && order.id.toString().includes(term)) ||
+        (order.firstname && order.firstname.toLowerCase().includes(term)) ||
+        (order.lastname && order.lastname.toLowerCase().includes(term)) ||
+        (order.email && order.email.toLowerCase().includes(term)) ||
+        (order.phone && order.phone.includes(term))
+      );
+    }
+
+    this.filteredOrders = filtered;
+    this.calculateStats();
+
+    // Giữ lại trang cũ nếu được yêu cầu
+    if (keepPage) {
+      this.currentPage = previousPage;
+    } else {
+      this.currentPage = 1;
+    }
+
+    this.updatePagination();
+  }
+
+
+  // Tính thống kê
+  calculateStats(): void {
+    this.statusStats = {};
+    this.filteredOrders.forEach(order => {
+      const status = order.orderStatus;
+      this.statusStats[status] = (this.statusStats[status] || 0) + 1;
+    });
+  }
+
+  // Phân trang
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.filteredOrders.length / this.pageSize);
+    this.currentPage = Math.min(this.currentPage, this.totalPages || 1);
+
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedOrders = this.filteredOrders.slice(startIndex, endIndex);
+  }
+
+  get startIndex(): number {
+    return (this.currentPage - 1) * this.pageSize;
+  }
+
+  get endIndex(): number {
+    return Math.min(this.startIndex + this.pageSize, this.filteredOrders.length);
+  }
+
+  getPageNumbers(): number[] {
+    const pages = [];
+    const maxVisiblePages = 5;
+
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  goToPage(page: number): void {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
+  }
+
+  onPageSizeChange(): void {
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  onStatusFilterChange(): void {
+    this.currentPage = 1;
+    this.applyFilters();
+  }
+
+  onSearch(): void {
+    this.currentPage = 1;
+    this.applyFilters();
+  }
+
+  // Hiển thị toast message
+  private showToast(severity: string, summary: string, detail: string): void {
+    this.messageService.add({
+      severity: severity,
+      summary: summary,
+      detail: detail,
+      life: 3000
+    });
+  }
+
+  // Các phương thức cũ giữ nguyên
   getStatusText(orderStatus: string): string {
     if (!orderStatus) return 'Không xác định';
     return this.statusMap[orderStatus] || orderStatus;
@@ -88,16 +351,11 @@ export class OrderComponent implements OnInit {
     return ['PENDING', 'COMPLETED', 'CANCELLED'].includes(orderStatus);
   }
 
-  // Kiểm tra xem có thể huỷ đơn hàng không (chỉ cho PENDING)
   canCancelOrder(orderStatus: string): boolean {
     return orderStatus === 'PENDING';
   }
 
-  onStatusButtonClick(order: any, action: string) {
-    if (!order || !order.orderStatus) {
-      return;
-    }
-
+  onStatusButtonClick(order: any, action: string): void {
     switch (action) {
       case 'confirm':
         if (!this.isButtonDisabled(order.orderStatus)) {
@@ -120,59 +378,87 @@ export class OrderComponent implements OnInit {
         }
         break;
       default:
-        console.log('Action không xác định');
+      // Không xử lý
     }
   }
 
-  confirmOrder(orderId: number) {
-    console.log('Xác nhận đơn hàng:', orderId);
+  confirmOrder(orderId: number): void {
     this.orderService.confirmOrder(orderId).subscribe({
       next: res => {
-        console.log('Xác nhận thành công');
-        this.getListOrder();
+        this.showToast('success', 'Thành công', 'Đã xác nhận đơn hàng');
+        this.getListOrder(true);
+        setTimeout(() => {
+          const element = document.getElementById(`order-${orderId}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('highlight-order'); // thêm hiệu ứng
+            setTimeout(() => element.classList.remove('highlight-order'), 2000);
+          }
+        }, 300);
       },
       error: err => {
-        console.log('Lỗi xác nhận:', err);
+        this.showToast('error', 'Lỗi', 'Không thể xác nhận đơn hàng');
       }
     });
   }
 
-  shipOrder(orderId: number) {
-    console.log('Bắt đầu giao hàng:', orderId);
+  shipOrder(orderId: number): void {
     this.orderService.shipOrder(orderId).subscribe({
       next: res => {
-        console.log('Bắt đầu giao hàng thành công');
-        this.getListOrder();
+        this.showToast('success', 'Thành công', 'Đã bắt đầu giao hàng');
+        this.getListOrder(true);
+        setTimeout(() => {
+          const element = document.getElementById(`order-${orderId}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('highlight-order'); // thêm hiệu ứng
+            setTimeout(() => element.classList.remove('highlight-order'), 2000);
+          }
+        }, 300);
       },
       error: err => {
-        console.log('Lỗi bắt đầu giao hàng:', err);
+        this.showToast('error', 'Lỗi', 'Không thể bắt đầu giao hàng');
       }
     });
   }
 
-  completeOrder(orderId: number) {
-    console.log('Hoàn thành đơn hàng:', orderId);
+  completeOrder(orderId: number): void {
     this.orderService.completeOrder(orderId).subscribe({
       next: res => {
-        console.log('Hoàn thành đơn hàng thành công');
-        this.getListOrder();
+        this.showToast('success', 'Thành công', 'Đã hoàn thành đơn hàng');
+        this.getListOrder(true);
+        setTimeout(() => {
+          const element = document.getElementById(`order-${orderId}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('highlight-order'); // thêm hiệu ứng
+            setTimeout(() => element.classList.remove('highlight-order'), 2000);
+          }
+        }, 300);
       },
       error: err => {
-        console.log('Lỗi hoàn thành đơn hàng:', err);
+        this.showToast('error', 'Lỗi', 'Không thể hoàn thành đơn hàng');
       }
     });
   }
 
-  cancelOrder(orderId: number) {
-    console.log('Huỷ đơn hàng:', orderId);
+  cancelOrder(orderId: number): void {
     if (confirm('Bạn có chắc chắn muốn huỷ đơn hàng này?')) {
       this.orderService.cancelOrder(orderId).subscribe({
         next: res => {
-          console.log('Huỷ đơn hàng thành công');
-          this.getListOrder();
+          this.showToast('success', 'Thành công', 'Đã huỷ đơn hàng');
+          this.getListOrder(true);
+          setTimeout(() => {
+            const element = document.getElementById(`order-${orderId}`);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              element.classList.add('highlight-order'); // thêm hiệu ứng
+              setTimeout(() => element.classList.remove('highlight-order'), 2000);
+            }
+          }, 300);
         },
         error: err => {
-          console.log('Lỗi huỷ đơn hàng:', err);
+          this.showToast('error', 'Lỗi', 'Không thể huỷ đơn hàng');
         }
       });
     }

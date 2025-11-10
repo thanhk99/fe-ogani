@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { faBars, faHeart, faPhone, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
 import { CartService } from 'src/app/_service/cart.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -17,7 +18,7 @@ export class CartComponent implements OnInit {
 
   showDepartment = false;
 
-  constructor(public cartService: CartService, private messageService: MessageService) {}
+  constructor(public cartService: CartService, private messageService: MessageService, private router: Router) {}
 
   ngOnInit() {
     // Load giỏ hàng khi component được khởi tạo
@@ -54,10 +55,45 @@ export class CartComponent implements OnInit {
   }
 
   checkoutOrder() {
-    if (this.cartService.getItems().length === 0) {
-      this.messageService.add({severity:'warn', summary: 'Cảnh báo', detail: 'Giỏ hàng trống! Vui lòng thêm sản phẩm vào giỏ hàng.'});
-      return;
-    }
-    this.cartService.checkoutOrder();
+  const items = this.cartService.getItems();
+
+  // 🛒 Nếu giỏ hàng trống
+  if (items.length === 0) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Cảnh báo',
+      detail: '🛒 Giỏ hàng trống! Vui lòng thêm sản phẩm vào giỏ hàng.'
+    });
+    return;
   }
+
+  // 🧾 Kiểm tra tồn kho qua API
+  this.cartService.checkOrder().subscribe({
+    next: (res) => {
+      // this.messageService.add({
+      //   severity: 'success',
+      //   summary: 'Xác nhận đơn hàng',
+      //   detail: res.message || 'Tất cả sản phẩm đều đủ số lượng tồn.'
+      // });
+
+      // 👉 Điều hướng sang trang thanh toán
+      setTimeout(() => {
+        this.router.navigate(['/checkout']);
+      }, 1000);
+    },
+    error: (err) => {
+      
+      const errors = err.error?.errors || [err.error?.message || 'Một số sản phẩm không đủ số lượng tồn.'];
+
+      errors.forEach((msg: string) => {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Cảnh báo',
+          detail: msg
+        });
+      });
+    }
+  });
+}
+
 }

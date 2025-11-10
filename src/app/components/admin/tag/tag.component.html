@@ -35,10 +35,16 @@
             <tr>
                 <td>{{tag.name}}</td>
                 <td>
-                    <button pButton type="button" class="p-button-info" (click)="enableTag(tag.id)"
-                        *ngIf="tag.enable">Hủy Kích hoạt</button>
-                    <button pButton type="button" class="p-button-warning" (click)="enableTag(tag.id)"
-                        *ngIf="!tag.enable">Kích hoạt</button>
+                    <button pButton type="button" class="p-button-info" (click)="enableTag(tag.id, tag.enable)"
+                        *ngIf="tag.enable">
+                        Hủy Kích hoạt
+                    </button>
+
+                    <button pButton type="button" class="p-button-warning" (click)="enableTag(tag.id, tag.enable)"
+                        *ngIf="!tag.enable">
+                        Kích hoạt
+                    </button>
+
                 </td>
                 <td>
                     <button pButton type="button" icon="pi pi-pencil" (click)="onUpdateForm(tag.id, tag.name)"

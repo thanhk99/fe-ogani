@@ -59,14 +59,14 @@ export class ProductComponent implements OnInit {
     // { label: 'Milimet (mm)', value: 'MM' },
 
     // --- Đếm / gói ---
-    { label: 'Cái', value: 'CAI' },
-    { label: 'Chiếc', value: 'CHIEC' },
-    { label: 'Hộp', value: 'HOP' },
+    { label: 'Cái', value: 'CÁI' },
+    { label: 'Chiếc', value: 'CHIẾC' },
+    { label: 'Hộp', value: 'HỘP' },
     { label: 'Lon', value: 'LON' },
     { label: 'Chai', value: 'CHAI' },
-    { label: 'Túi', value: 'TUI' },
-    { label: 'Gói', value: 'GOI' },
-    { label: 'Thùng', value: 'THUNG' },
+    { label: 'Túi', value: 'TÚI' },
+    { label: 'Gói', value: 'GÓI' },
+    { label: 'Thùng', value: 'THÙNG' },
 
     // --- Khác ---
     // { label: 'Set/Bộ', value: 'SET' },

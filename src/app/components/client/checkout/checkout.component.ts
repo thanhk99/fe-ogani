@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { CartService } from 'src/app/_service/cart.service';
 import { OrderService } from 'src/app/_service/order.service';
 import { StorageService } from 'src/app/_service/storage.service';
+import { NotificationService } from 'src/app/_service/notification.service'; // Thêm service mới
 
 @Component({
   selector: 'app-checkout',
@@ -18,11 +19,11 @@ export class CheckoutComponent implements OnInit {
   bag = faShoppingBag;
   phone = faPhone;
   bars = faBars;
-  
+
   showDepartment = false;
   username: string = '';
-  paymentMethod: string = 'COD'; // Mặc định là COD
-  
+  paymentMethod: string = 'COD';
+
   orderForm = {
     firstname: '',
     lastname: '',
@@ -41,11 +42,13 @@ export class CheckoutComponent implements OnInit {
     private orderService: OrderService,
     private storageService: StorageService,
     public messageService: MessageService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private notificationService: NotificationService // Thêm service
+  ) { }
 
   ngOnInit(): void {
     this.username = this.storageService.getUser().username;
+    this.cartService.loadCart();
     this.cartService.getItems();
   }
 
@@ -59,10 +62,10 @@ export class CheckoutComponent implements OnInit {
 
   placeOrder(): void {
     if (!this.isFormValid()) {
-      this.messageService.add({ 
-        severity: 'error', 
-        summary: 'Lỗi', 
-        detail: 'Vui lòng nhập đầy đủ thông tin bắt buộc!' 
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Lỗi',
+        detail: 'Vui lòng nhập đầy đủ thông tin bắt buộc!'
       });
       return;
     }
@@ -84,12 +87,39 @@ export class CheckoutComponent implements OnInit {
       this.paymentMethod
     ).subscribe({
       next: (res) => {
-        console.log(res)
+        console.log('Order response:', res);
         this.orderService.setOrderId(res.OrderId);
+
+        // Gửi thông báo đến admin
+        this.notifyAdminAboutNewOrder(res);
+
         this.handleOrderSuccess(res);
       },
       error: (err) => {
         this.handleOrderError(err);
+      }
+    });
+  }
+
+  // Gửi thông báo đến admin về đơn hàng mới
+  private notifyAdminAboutNewOrder(orderResponse: any): void {
+    const notification = {
+      type: 'NEW_ORDER',
+      message: `🆕 Có đơn hàng mới #${orderResponse.OrderId || orderResponse.id} từ ${this.orderForm.firstname} ${this.orderForm.lastname}`,
+      orderId: orderResponse.OrderId || orderResponse.id,
+      customerName: `${this.orderForm.firstname} ${this.orderForm.lastname}`,
+      totalAmount: this.cartService.getTotal(),
+      paymentMethod: this.paymentMethod,
+      timestamp: new Date().toISOString()
+    };
+
+    // Gửi thông báo qua service
+    this.notificationService.notifyAdmin(notification).subscribe({
+      next: () => {
+        console.log('✅ Notification sent to admin');
+      },
+      error: (err) => {
+        console.error('❌ Failed to send notification:', err);
       }
     });
   }
@@ -114,42 +144,45 @@ export class CheckoutComponent implements OnInit {
       orderDetail.quantity = item.quantity;
       orderDetail.subTotal = item.subTotal;
       orderDetail.productId = item.id;
-      orderDetail.payMethod=this.paymentMethod;
+      orderDetail.payMethod = this.paymentMethod;
       return orderDetail;
     });
   }
 
   private handleOrderSuccess(response: any): void {
-    this.messageService.add({ 
-      severity: 'success', 
-      summary: 'Thành công', 
-      detail: 'Đặt hàng thành công!' 
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Thành công',
+      detail: 'Đặt hàng thành công!'
     });
 
-    // Chuyển hướng theo phương thức thanh toán
+    // ✅ Tính tổng trước khi xóa
+    this.cartService.calculateTotal();
+    const totalAmount = this.cartService.getTotal();
+
     setTimeout(() => {
       if (this.paymentMethod === 'VNPay') {
-        this.navigateToPayment(response);
+        this.navigateToPayment(response, totalAmount); // ✅ Truyền total qua đây
       } else {
+        this.cartService.clearCart();
         this.router.navigate(['/my-order']);
       }
     }, 1500);
   }
 
+
   private handleOrderError(error: any): void {
     console.error('Order error:', error);
-    this.messageService.add({ 
-      severity: 'error', 
-      summary: 'Lỗi', 
-      detail: 'Có lỗi xảy ra khi đặt hàng!' 
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Lỗi',
+      detail: 'Có lỗi xảy ra khi đặt hàng!'
     });
   }
 
-  private navigateToPayment(orderResponse: any): void {
+  private navigateToPayment(orderResponse: any, totalAmount: number): void {
     const orderCode = orderResponse.OrderId || this.generateOrderCode();
-    console.log(orderResponse)
-    this.cartService.calculateTotal();
-    const totalAmount = this.cartService.getTotal();
+
     const paymentData = {
       orderCode: orderCode,
       amount: totalAmount,
@@ -158,9 +191,9 @@ export class CheckoutComponent implements OnInit {
       orderId: orderResponse.id || orderResponse.orderId
     };
 
-    sessionStorage.setItem('paymentData', JSON.stringify(paymentData));// lưu vào session
-    this.cartService.clearCart();// xóa dữ liệu trong cart
-    this.router.navigate(['/payment'], { // chuyển đến trang thanh toán VNPay
+    sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
+    this.cartService.clearCart(); // ✅ Chỉ xóa ở đây sau khi lưu paymentData
+    this.router.navigate(['/payment'], {
       queryParams: {
         orderCode: paymentData.orderCode,
         amount: paymentData.amount,
@@ -169,20 +202,21 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+
   private generateOrderCode(): string {
     return 'ORD' + Date.now();
   }
 
   // Helper methods cho template
   getOrderButtonText(): string {
-    return this.paymentMethod === 'VNPay' 
-      ? 'Đặt hàng & Thanh toán VNPay' 
+    return this.paymentMethod === 'VNPay'
+      ? 'Đặt hàng & Thanh toán VNPay'
       : 'Đặt hàng (COD)';
   }
 
   getOrderButtonIcon(): string {
-    return this.paymentMethod === 'VNPay' 
-      ? 'pi pi-credit-card' 
+    return this.paymentMethod === 'VNPay'
+      ? 'pi pi-credit-card'
       : 'pi pi-shopping-cart';
   }
 }

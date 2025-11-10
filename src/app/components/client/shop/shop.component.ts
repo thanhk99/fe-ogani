@@ -8,6 +8,7 @@ import { ProductService } from 'src/app/_service/product.service';
 import { WishlistService } from 'src/app/_service/wishlist.service';
 
 
+
 @Component({
   selector: 'app-shop',
   templateUrl: './shop.component.html',
